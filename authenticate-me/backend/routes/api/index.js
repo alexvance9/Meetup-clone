@@ -31,10 +31,7 @@ router.post('/test', (req, res) => {
 //     }
 // );
 
-// test route
-// router.post('/test', function (req, res) {
-//     res.json({ requestBody: req.body });
-// });
+
 
 // TEST setTokenCookie function
 // GET /api/set-token-cookie

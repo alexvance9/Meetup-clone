@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     
     // toSafeObject method will return an object with only safe info for JWT, in this case id, username, email.
+    // adding firstName and lastName
     toSafeObject() {
       const { id, username, email } = this; // context will be the User instance
       return { id, username, email };
@@ -37,6 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     static async signup({ username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
+        firstName,
+        lastName,
         username,
         email,
         hashedPassword
@@ -52,8 +55,8 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       username: {
-        type: DataTypes.STRING,
         allowNull: false,
+        type: DataTypes.STRING,
         validate: {
           len: [4, 30],
           isNotEmail(value) {
@@ -64,19 +67,27 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       email: {
-        type: DataTypes.STRING,
         allowNull: false,
+        type: DataTypes.STRING,
         validate: {
           len: [3, 256],
           isEmail: true
         }
       },
       hashedPassword: {
-        type: DataTypes.STRING.BINARY,
         allowNull: false,
+        type: DataTypes.STRING.BINARY,
         validate: {
           len: [60, 60]
         }
+      },
+      firstName: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      lastName : {
+        allowNull: false,
+        type: DataTypes.STRING,
       }
     }, 
     {
