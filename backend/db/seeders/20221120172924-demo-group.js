@@ -41,11 +41,11 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    options.tableName = 'Groups';
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      name: { [Op.in]: ['DemoGroup1', 'Corn Appreciation Group', 'SWE Bootcamp Support Group'] }
+    }, {});
+  
   }
 };

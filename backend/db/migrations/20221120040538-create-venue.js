@@ -34,11 +34,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       lat: {
-        // allow null? will this be entered or generated?
+        allowNull: false,
         type: Sequelize.DECIMAL
       },
       lng: {
-        // see comment above
+        allowNull: false,
         type: Sequelize.DECIMAL
       },
       createdAt: {

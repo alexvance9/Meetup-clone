@@ -23,21 +23,60 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate: {
+        is: {
+          // regex for street address pattern
+          args: /\d+\w+\s\w+\s\w+/,
+          msg: "Street address is required"
+        }
+      }
     },
     city: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate: {
+        notNull: {
+          msg: "City is required"
+        }
+      }
     },
     state: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate: {
+        notNull: {
+          msg: "State is required"
+        }
+      }
     },
     lat: {
-      type: DataTypes.DECIMAL
+      allowNull: false,
+      type: DataTypes.DECIMAL,
+      validate: {
+        min: {
+          args: -90,
+          msg: "Latitude is not valid"
+        },
+        max: {
+          args: 90,
+          msg: "Latitude is not valid"
+        }
+      }
     },
     lng: {
-      type: DataTypes.DECIMAL
+      allowNull: false,
+      type: DataTypes.DECIMAL,
+      validate: {
+        min: {
+          args: -180,
+          msg: "Longitude is not valid"
+        },
+        max: {
+          args: 180,
+          msg: "Longitude is not valid"
+        }
+      }
     }
   }, {
     sequelize,
