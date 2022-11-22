@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       // organizer 
       Group.hasOne(
         models.User,
-        { foreignKey: organizerId }
+        { foreignKey: 'organizerId' }
       )
       // members
       Group.hasMany(
@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         // event
       Group.belongsToMany(
         models.Event,
+        {foreignKey: 'groupId'}
+      )
+      // images
+      Group.hasMany(
+        models.GroupImage,
         {foreignKey: 'groupId'}
       )
     }

@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Membership.hasMany(
         models.Group,
-        {foreignKey: groupId}
+        {foreignKey: 'groupId'}
       )
       Membership.hasMany(
         models.User,
-        {foreignKey: userId}
+        {foreignKey: 'userId'}
       )
     }
   }
