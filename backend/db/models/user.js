@@ -83,6 +83,10 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           len: [3, 256],
           isEmail: true
+        },
+        unique: {
+          args: true,
+          msg: 'User with that email already exists'
         }
       },
       hashedPassword: {
@@ -111,7 +115,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       scopes: {
         currentUser: {
-          attributes: { exclude: ["hashedPassword"] }
+          attributes: { exclude: ["hashedPassword", "createdAt", "updatedAt"] }
         },
         loginUser: {
           attributes: {}

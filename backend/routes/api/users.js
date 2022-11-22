@@ -33,6 +33,7 @@ const validateSignup = [
     check('lastName')
         .exists({ checkFalsy: true })
         .withMessage('Please provide valid last name'),
+
     handleValidationErrors
 ];
 
@@ -40,15 +41,22 @@ const validateSignup = [
 router.post(
     '/',
     validateSignup,
-    async (req, res) => {
-        const { firstName, lastName, email, password, username } = req.body;
-        const user = await User.signup({ firstName, lastName, email, username, password });
-
-        await setTokenCookie(res, user);
-
-        return res.json({
-            user: user
-        });
+    async (req, res, next) => {
+        try {
+            const { firstName, lastName, email, password, username } = req.body;
+            const user = await User.signup({ firstName, lastName, email, username, password });
+    
+            await setTokenCookie(res, user);
+    
+            return res.json({
+                user: user
+            });
+        } catch(err){
+            err.message = 'User already exists';
+            err.status = 403;
+            
+            return next(err)
+        }
     }
 );
 
