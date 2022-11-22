@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class GroupImage extends Model {
    
     static associate(models) {
-      GroupImage.hasOne(
+      GroupImage.belongsTo(
         models.Group,
         {foreignKey: 'groupId'}
       )

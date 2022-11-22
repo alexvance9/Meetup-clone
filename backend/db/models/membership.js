@@ -6,14 +6,14 @@ module.exports = (sequelize, DataTypes) => {
   class Membership extends Model {
    
     static associate(models) {
-      Membership.hasMany(
-        models.Group,
-        {foreignKey: 'groupId'}
-      )
-      Membership.hasMany(
-        models.User,
-        {foreignKey: 'userId'}
-      )
+      // Membership.belongsToMany(
+      //   models.Group,
+      //   {foreignKey: 'groupId'}
+      // )
+      // Membership.belongsToMany(
+      //   models.User,
+      //   {foreignKey: 'userId'}
+      // )
     }
   }
   Membership.init({

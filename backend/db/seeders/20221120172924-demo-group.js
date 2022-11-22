@@ -45,7 +45,7 @@ module.exports = {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       name: { [Op.in]: ['DemoGroup1', 'Corn Appreciation Group', 'SWE Bootcamp Support Group'] }
-    }, {});
+    });
   
   }
 };

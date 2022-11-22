@@ -50,6 +50,6 @@ module.exports = {
    const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       address: { [Op.in]: ["246 Demo ln", "135 Demo ln", "333 Corn ave", "5678 App Academy dr"]}
-    }, {});
+    });
   }
 };
