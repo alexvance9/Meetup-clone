@@ -4,6 +4,13 @@ const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../..
 
 const router = express.Router();
 
+// post create new image for group
+// current user must be organizer for the group
+router.post('/:groupId/images', requireAuth, async (req, res, next) => {
+    
+})
+
+
 // post create new group
 router.post('/', requireAuth, async (req, res, next) => {
     const {user} = req;

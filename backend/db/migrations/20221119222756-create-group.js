@@ -32,7 +32,7 @@ module.exports = {
       },
       type: {
         allowNull: false,
-        type: Sequelize.ENUM("Online", "In Person"),
+        type: Sequelize.ENUM("Online", "In person"),
       },
       private: {
         allowNull: false,
