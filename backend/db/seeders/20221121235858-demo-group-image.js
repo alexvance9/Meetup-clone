@@ -28,7 +28,7 @@ module.exports = {
       {
         groupId: 3,
         url: 'sample.com/sampleimg4',
-        preview: true
+        preview: false
       },
     ])
   
