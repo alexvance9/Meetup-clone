@@ -32,7 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       allowNull: false,
       defaultValue: 'pending',
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [['pending', 'waitlist', 'member', 'attending']],
+          msg: 'Invalid attendance status'
+        }
+      }
     }
   }, {
     sequelize,
