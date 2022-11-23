@@ -1,11 +1,48 @@
 const express = require('express');
-const { setTokenCookie, restoreUser, requireAuth, isOrganizer } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost } = require('../../utils/auth');
 const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
 
 const router = express.Router();
 
 // get all venues for group by id
-// 
+// requires user to be organizer or cohost
+router.get('/:groupId/venues', requireAuth, isOrganizerOrCoHost, async (req, res, next) => {
+   const groupVenues = await Venue.findAll({
+    where: {
+        groupId: req.params.groupId
+    }
+   })
+    
+    res.json({
+        Venues: groupVenues
+    });
+})
+
+// create a new venue for a group
+// user must be organizer or cohost
+router.post('/:groupId/venues', requireAuth, isOrganizerOrCoHost, async (req, res, next) => {
+
+    const { address, city, state, lat, lng } = req.body;
+    const newVenue = await Venue.create({
+        groupId: req.params.groupId,
+        address,
+        city,
+        state,
+        lat,
+        lng
+    })
+    // why default scope no work
+    res.json({
+        id: newVenue.id,
+        groupId: newVenue.groupId,
+        address: newVenue.address,
+        city: newVenue.city,
+        state: newVenue.state,
+        lat: newVenue.lat,
+        lng: newVenue.lng
+    });
+
+})
 
 // post create new image for group
 // current user must be organizer for the group
