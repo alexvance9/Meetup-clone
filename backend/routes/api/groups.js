@@ -4,6 +4,37 @@ const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../..
 
 const router = express.Router();
 
+// post create new group
+router.post('/', requireAuth, async (req, res, next) => {
+    const {user} = req;
+    const { name, about, type, private, city, state } = req.body;
+    console.log(about)
+    console.log(type)
+
+    try {
+        const newGroup = await Group.create({
+            organizerId: user.id,
+            name,
+            about,
+            type,
+            private,
+            city,
+            state
+        })
+        const newMembership = await Membership.create({
+            userId: user.id,
+            groupId: newGroup.id,
+            status: "organizer"
+        })
+        console.log(newMembership);
+    
+        res.json(newGroup)
+    } catch (err) {
+        err.status = 400;
+        next(err)
+    }
+})
+
 
 // Get current users groups
 router.get('/current', requireAuth, async (req, res, next) => {

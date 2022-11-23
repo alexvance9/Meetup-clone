@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         // regex for is longer than 50 chars
         is: {
-          args: /^.{ 50,}/,
+          args: /^.{50,}/,
           msg: "About must be 50 characters or more"
         }
       }
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         isIn: {
-          args: [["In Person", "Online"]],
+          args: [["In person", "Online"]],
           msg: "Type must be 'Online' or 'In person'"
         }
       }
