@@ -1,8 +1,65 @@
 const express = require('express');
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
 
 const router = express.Router();
+
+
+// Get current users groups
+router.get('/current', requireAuth, async (req, res, next) => {
+    const { user } = req;
+    // find user by userid and include groups
+    const userGroups = await User.findByPk(user.id, {
+        include: [
+        {
+            model: Group,
+            as: "member",
+            include: [
+                {
+                    model: User,
+                    as: "members"
+                },
+                {
+                    model: GroupImage,
+                    attributes: ['url'],
+                    where: {
+                        preview: true,
+                    },
+                    required: false
+                },
+            ],
+        },
+    ]
+    });
+    const jsonGroups = userGroups.toJSON()
+    // grab the list of groups under alias "member"
+    const groups = jsonGroups.member;
+    // for each group in array,
+    // remove unneccessary eles and get num members and previmg url
+    groups.forEach(group => {
+        delete group.Membership
+
+        group.numMembers = group.members.length
+        delete group.members
+
+        if (group.GroupImages.length) {
+            group.previewImage = group.GroupImages[0].url
+        } else {
+            group.previewImage = "No preview image provided"
+        }
+        delete group.GroupImages
+
+    })
+    // console.log(groups)
+    // 
+
+    res.json({
+        Groups: [
+            ...groups
+        ]
+    })
+})
+
 
 // GET all groups
 router.get(
@@ -56,53 +113,52 @@ router.get(
     }
 )
 
+
+// Get group by group id
 router.get(
     '/:groupId',
      async (req, res, next) => {
         let id = req.params.groupId;
-    const group = await Group.findByPk(id, {
-        include: [
-            {
-                model: User,
-                as: "members"
-            },
-            {
-                model: GroupImage,
-                required: false
-            },
-            {
-                model: User,
-                as: 'Organizer',
-                attributes: ['id', 'firstName', 'lastName']
-            },
-            {
-                model: Venue,
-                required: false,
-            }
-        ],
-
-    });
-
+        
+        const group = await Group.findByPk(id, {
+            include: [
+                {
+                    model: User,
+                    as: "members"
+                },
+                {
+                    model: GroupImage,
+                    required: false
+                },
+                {
+                    model: User,
+                    as: 'Organizer',
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    model: Venue,
+                    required: false,
+                }
+            ],
+            
+        });
+        
+        if (group){
     const jsonGroup = group.toJSON()
     jsonGroup.numMembers = group.members.length;
     delete jsonGroup.members;
-         
-
-        //  // JSON groups
-        //  await allGroups.forEach(async group => {
-        //      jsonGroup = group.toJSON()
-        //      groupsArr.push(jsonGroup)
-        //  })
-
-        //  groupsArr.forEach(group => {
-        //      group.numMembers = group.members.length
-        //      delete group.members
-
-        //  })
-
-         res.json({
-             jsonGroup
-         })
+        
+    res.json({
+        jsonGroup
+    })
+    } else {
+        const err = new Error()
+        err.status = 404;
+        err.message = "Group couldn't be found";
+        next(err)
+    }
 })
+
+
 
 module.exports = router;
