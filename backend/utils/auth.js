@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group } = require('../db/models');
+const { User, Group, Membership } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -72,6 +72,7 @@ const requireAuth = function (req, _res, next) {
 }
 
 // verify that current user is group organizer
+// PLEASE DRY THIS UP
 
 const isOrganizer = async function (req, res, next) {
     const { user } = req;
@@ -93,7 +94,38 @@ const isOrganizer = async function (req, res, next) {
     err.errors = ['Must be group organizer'];
     err.status = 401;
     return next(err);
-
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth, isOrganizer };
+const isOrganizerOrCoHost = async function (req, res, next) {
+    const { user } = req;
+    const { groupId } = req.params;
+
+    const currentGroup = await Group.findByPk(groupId)
+
+    if (!currentGroup) {
+        const err = new Error("Group could not be found");
+        err.status = 404;
+        return next(err);
+    }
+    const isMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: req.params.groupId
+        }
+    })
+    if (isMember) {
+        const jsonMember = isMember.toJSON();
+        const status = jsonMember.status;
+        if (status === "organizer" || status === "co-host"){
+            return next()
+        }
+    }
+
+    const err = new Error('Must be group organizer or cohost');
+    err.title = 'Must be group organizer or cohost';
+    err.errors = ['Must be group organizer or cohost'];
+    err.status = 401;
+    return next(err);
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost };

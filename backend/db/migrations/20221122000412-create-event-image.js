@@ -17,6 +17,7 @@ module.exports = {
       },
       eventId: {
         allowNull: false,
+        // onDelete: 'CASCADE',
         type: Sequelize.INTEGER,
         references: {
           model: 'Events'
