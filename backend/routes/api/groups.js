@@ -6,9 +6,16 @@ const router = express.Router();
 
 // post create new image for group
 // current user must be organizer for the group
+// created new auth middleware to check for organizer
 router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next) => {
-    const { user } = req;
-    res.json()
+    const { url, preview } = req.body
+    const group = await Group.findByPk(req.params.groupId);
+    const newGroupImage = await group.createGroupImage({
+        url,
+        preview
+    })
+
+    res.json(newGroupImage)
 })
 
 

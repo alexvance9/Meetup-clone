@@ -79,8 +79,13 @@ const isOrganizer = async function (req, res, next) {
 
     const currentGroup = await Group.findByPk(groupId)
     const jsonGroup = currentGroup.toJSON()
-    console.log(jsonGroup)
-    return next()
+    if (jsonGroup.organizerId === user.id) return next();
+
+    const err = new Error('Must be group organizer');
+    err.title = 'Must be group organizer';
+    err.errors = ['Must be group organizer'];
+    err.status = 401;
+    return next(err);
 
 }
 
