@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Group } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -71,4 +71,29 @@ const requireAuth = function (req, _res, next) {
     return next(err);
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+// verify that current user is group organizer
+
+const isOrganizer = async function (req, res, next) {
+    const { user } = req;
+    const {groupId} = req.params;
+
+    const currentGroup = await Group.findByPk(groupId)
+
+    if(!currentGroup) {
+        const err = new Error("Group could not be found");
+        err.status = 404;
+        return next(err);
+    }
+
+    const jsonGroup = currentGroup.toJSON()
+    if (jsonGroup.organizerId === user.id) return next();
+
+    const err = new Error('Must be group organizer');
+    err.title = 'Must be group organizer';
+    err.errors = ['Must be group organizer'];
+    err.status = 401;
+    return next(err);
+
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, isOrganizer };

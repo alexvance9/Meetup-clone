@@ -27,7 +27,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       allowNull: false,
+      defaultValue: 'pending',
       type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [["organizer", "co-host", "member", "pending"]],
+          msg: "invalid membership status"
+        }
+      }
     }
   }, {
     sequelize,

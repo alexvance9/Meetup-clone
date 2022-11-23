@@ -1,13 +1,26 @@
 const express = require('express');
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth, isOrganizer } = require('../../utils/auth');
 const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
 
 const router = express.Router();
 
 // post create new image for group
 // current user must be organizer for the group
-router.post('/:groupId/images', requireAuth, async (req, res, next) => {
-    
+// created new auth middleware to check for organizer
+router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next) => {
+    const { url, preview } = req.body
+    const group = await Group.findByPk(req.params.groupId);
+    const newGroupImage = await group.createGroupImage({
+        url,
+        preview
+    })
+
+    // figure out why default scope didnt work here
+    res.json({
+        id: newGroupImage.id,
+        url: newGroupImage.url,
+        preview: newGroupImage.preview
+    })
 })
 
 
