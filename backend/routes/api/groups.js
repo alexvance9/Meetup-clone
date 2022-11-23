@@ -15,7 +15,12 @@ router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next)
         preview
     })
 
-    res.json(newGroupImage)
+    // figure out why default scope didnt work here
+    res.json({
+        id: newGroupImage.id,
+        url: newGroupImage.url,
+        preview: newGroupImage.preview
+    })
 })
 
 
