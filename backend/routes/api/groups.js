@@ -4,6 +4,9 @@ const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../..
 
 const router = express.Router();
 
+// get all venues for group by id
+// 
+
 // post create new image for group
 // current user must be organizer for the group
 // created new auth middleware to check for organizer
@@ -25,7 +28,30 @@ router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next)
 
 // edit a group
 // current user must be organizer for the group
+router.put('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
+    const {name, about, type, private, city, state } = req.body;
 
+    const group = await Group.findByPk(req.params.groupId);
+    group.update({
+        name,
+        about,
+        type,
+        private,
+        city,
+        state
+    })
+
+    res.json(group);
+});
+
+// delete a group
+// requires user isOrganizer
+router.delete('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
+    const group = await Group.findByPk(req.params.groupId);
+    await group.destroy();
+
+    res.json("Successfully deleted");
+})
 
 
 // post create new group
