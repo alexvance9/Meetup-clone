@@ -78,6 +78,13 @@ const isOrganizer = async function (req, res, next) {
     const {groupId} = req.params;
 
     const currentGroup = await Group.findByPk(groupId)
+
+    if(!currentGroup) {
+        const err = new Error("Group could not be found");
+        err.status = 404;
+        return next(err);
+    }
+
     const jsonGroup = currentGroup.toJSON()
     if (jsonGroup.organizerId === user.id) return next();
 
