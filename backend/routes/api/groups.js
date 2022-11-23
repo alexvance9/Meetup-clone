@@ -1,13 +1,14 @@
 const express = require('express');
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth, isOrganizer } = require('../../utils/auth');
 const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
 
 const router = express.Router();
 
 // post create new image for group
 // current user must be organizer for the group
-router.post('/:groupId/images', requireAuth, async (req, res, next) => {
-    
+router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next) => {
+    const { user } = req;
+    res.json()
 })
 
 

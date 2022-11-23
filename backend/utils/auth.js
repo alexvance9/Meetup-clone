@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Group } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -71,4 +71,17 @@ const requireAuth = function (req, _res, next) {
     return next(err);
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+// verify that current user is group organizer
+
+const isOrganizer = async function (req, res, next) {
+    const { user } = req;
+    const {groupId} = req.params;
+
+    const currentGroup = await Group.findByPk(groupId)
+    const jsonGroup = currentGroup.toJSON()
+    console.log(jsonGroup)
+    return next()
+
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, isOrganizer };
