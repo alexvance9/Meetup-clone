@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group, Membership } = require('../db/models');
+const { User, Group, Membership, Venue } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -96,9 +96,26 @@ const isOrganizer = async function (req, res, next) {
     return next(err);
 }
 
+
+// HAHAAAAA REFACTOR PLEASE
 const isOrganizerOrCoHost = async function (req, res, next) {
     const { user } = req;
-    const { groupId } = req.params;
+    // const {venueId} = req.params;
+    
+    let groupId;
+    if (req.params.venueId){
+        console.log("got here!")
+        const venue = await Venue.findByPk(req.params.venueId);
+        if(venue){
+            groupId = venue.groupId
+        } else {
+            const err = new Error("Venue couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
+    } else {
+        groupId = req.params.groupId;
+    }
 
     const currentGroup = await Group.findByPk(groupId)
 
@@ -110,7 +127,7 @@ const isOrganizerOrCoHost = async function (req, res, next) {
     const isMember = await Membership.findOne({
         where: {
             userId: user.id,
-            groupId: req.params.groupId
+            groupId: groupId
         }
     })
     if (isMember) {
