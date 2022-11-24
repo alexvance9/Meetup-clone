@@ -29,9 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
       validate: {
-        is: {
+        len: {
           // regex for street address pattern
-          args: /\d+\w+\s\w+\s\w+/,
+          // args: /\d+\w+\s\w+\s\w+/,
+          args: [1, 50],
           msg: "Street address is required"
         }
       }
@@ -40,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
       validate: {
-        notNull: {
+        len: {
+          args: [1, 50],
           msg: "City is required"
         }
       }
@@ -49,7 +51,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
       validate: {
-        notNull: {
+        len: {
+          
+          args: [1, 50],
           msg: "State is required"
         }
       }
