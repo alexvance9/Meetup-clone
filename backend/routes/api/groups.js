@@ -63,11 +63,17 @@ router.get('/:groupId/events', async (req, res, next) => {
         } else {
             jsonEvent.previewImage = "No preview image provided"
         }
-        delete jsonEvent.EventImages
+        delete jsonEvent.EventImages;
+        delete jsonEvent.createdAt;
+        delete jsonEvent.updatedAt;
+        delete jsonEvent.capacity;
+        delete jsonEvent.price;
+        delete jsonEvent.description;
+        
 
         jsonEvents.push(jsonEvent)
     }
-    console.log(jsonEvents)
+    // console.log(jsonEvents)
     
     res.json({
         Events: jsonEvents
