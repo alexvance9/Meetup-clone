@@ -1,8 +1,84 @@
 const express = require('express');
 const { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost } = require('../../utils/auth');
-const { Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
+const { Attendance, Event, EventImage, Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
+const { json } = require('express');
 
 const router = express.Router();
+
+// get all events for group by groupid
+// no auth
+// REFACTOR PLEASE
+router.get('/:groupId/events', async (req, res, next) => {
+    const group = await Group.findByPk(req.params.groupId);
+    if(!group){
+        const err = new Error('Group could not be found');
+        err.status = 404;
+        return next(err);
+    } 
+
+    const events = await Event.findAll({
+        where: {
+            groupId: req.params.groupId
+        },
+        include: [
+            {
+                model: Venue,
+                attributes: ['id', 'city', 'state'],
+                required: false,
+            },
+            {
+                model: Group,
+                attributes: ['id', 'name', 'city', 'state']
+            },
+            {
+                model: EventImage,
+                attributes: ['url'],
+                where: {
+                    preview: true
+                },
+                required: false
+            }
+        ]
+    });
+    const jsonEvents = [];
+
+    const findNumAttending = async function(eventId){
+        return await Attendance.count({
+            where: {
+                eventId: eventId
+            }
+        })
+       
+    }
+    
+    for (let event of events){
+        const jsonEvent = event.toJSON();
+
+        const numAttending = await findNumAttending(jsonEvent.id);
+        console.log(numAttending);
+        jsonEvent.numAttending = numAttending;
+
+        if(event.EventImages.length){
+            jsonEvent.previewImage = event.EventImages[0].url
+        } else {
+            jsonEvent.previewImage = "No preview image provided"
+        }
+        delete jsonEvent.EventImages;
+        delete jsonEvent.createdAt;
+        delete jsonEvent.updatedAt;
+        delete jsonEvent.capacity;
+        delete jsonEvent.price;
+        delete jsonEvent.description;
+        
+
+        jsonEvents.push(jsonEvent)
+    }
+    // console.log(jsonEvents)
+    
+    res.json({
+        Events: jsonEvents
+    })
+})
 
 // get all venues for group by id
 // requires user to be organizer or cohost
