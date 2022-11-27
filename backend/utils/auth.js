@@ -104,7 +104,7 @@ const isOrganizerOrCoHost = async function (req, res, next) {
     
     let groupId;
     if (req.params.venueId){
-        console.log("got here!")
+        // console.log("got here!")
         const venue = await Venue.findByPk(req.params.venueId);
         if(venue){
             groupId = venue.groupId
