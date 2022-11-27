@@ -2,8 +2,223 @@ const express = require('express');
 const { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost } = require('../../utils/auth');
 const { Attendance, Event, EventImage, Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
 const { json } = require('express');
+const { Op } = require('sequelize')
 
 const router = express.Router();
+
+// DRY up some code-- make auth functions here instead of in auth util middleware
+// maybe make membership router...?
+
+// post request for membership to a group
+// creates a new group membership with status of pending
+// requires user auth 
+router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { user } = req;
+    const group = await Group.findByPk(req.params.groupId)
+    if(!group){
+        const err = new Error('Group could not be found');
+        err.status = 404;
+        return next(err)
+    }
+
+    const isMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: group.id
+        }
+    })
+    if(isMember){
+        if(isMember.status === "pending"){
+            const err = new Error('Membership has already been requested');
+            err.status = 400;
+            return next(err)
+        } 
+
+        const err = new Error('User is already a member of this group');
+        err.status = 400;
+        return next(err);
+    }
+
+    const newMembership = await Membership.create({
+        userId: user.id,
+        groupId: group.id,
+    })
+
+    console.log(newMembership.toJSON())
+    return res.json({
+        memberId: newMembership.id,
+        status: newMembership.status
+    })
+})
+
+// change status of membership for group based on id
+// must be org or cohost
+router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { memberId, status } = req.body;
+    const { user } = req;
+    console.log(user)
+    const group = await Group.findByPk(req.params.groupId);
+    if(!group){
+        const err = new Error('Group could not be found');
+        err.status = 404;
+        return next(err)
+    }
+
+
+    const membership = await Membership.findOne({
+        where: {
+            userId: memberId,
+            groupId: req.params.groupId
+        }
+    })
+    if(!membership){
+        const err = new Error('Membership between user and group does not exist');
+        err.status = 404;
+        return next(err);
+    }
+    if(status === 'pending'){
+        const err = new Error('Validations Error');
+        err.status = 400;
+        err.errors = {
+            status: "cannot change membership status to pending"
+        }
+        return next(err);
+    }
+    
+    const currentUserIsMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: group.id
+        }
+    })
+    
+    if(status === 'member'){
+        if(currentUserIsMember){
+            const jsonMember = currentUserIsMember.toJSON();
+            const memberStatus = jsonMember.status;
+            if(memberStatus !== "organizer" && memberStatus !== "co-host"){
+                const err = new Error('Must be group organizer or cohost');
+                err.status = 401;
+                return next(err)
+            }
+            
+            await membership.update({
+                status
+            })
+
+            const jsonMembership = membership.toJSON();
+            return res.json({
+                id: jsonMembership.id,
+                groupId: jsonMembership.groupId,
+                memberId: jsonMembership.userId,
+                status: jsonMembership.status
+            })
+        }
+        
+    }
+    if(status === 'co-host'){
+        if(currentUserIsMember){
+            const jsonMember = currentUserIsMember.toJSON();
+            const memberStatus = jsonMember.status;
+            if(memberStatus !== "organizer"){
+                const err = new Error('Must be group organizer');
+                err.status = 401;
+                return next(err)
+            }
+            
+            await membership.update({
+                status
+            })
+
+            const jsonMembership = membership.toJSON();
+            return res.json({
+                id: jsonMembership.id,
+                groupId: jsonMembership.groupId,
+                memberId: jsonMembership.userId,
+                status: jsonMembership.status
+            })
+        }
+        
+    }
+    console.log("got here for some reason :(")
+ 
+})
+
+// get all members for groupId
+// no auth requires, but different response for org/cohost
+// DRY IT UP 
+router.get('/:groupId/members', async (req, res, next) => {
+    const { user } = req;
+    const group = await Group.findByPk(req.params.groupId);
+    if (!group){
+        const err = new Error("Group could not be found");
+        err.status = 404;
+        return next(err)
+    }
+
+    const isOrgOrCohost = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: group.id,
+            status: {
+                [Op.in]: ['organizer', 'co-host']
+            }
+        }
+    });
+
+    if(isOrgOrCohost){
+        const allMembers = await Group.findByPk(req.params.groupId, {
+            include: {
+                model: User,
+                as: "members"
+            }
+        })
+        const jsonMembers = allMembers.toJSON();
+        const result = jsonMembers.members
+        for (let member of result){
+            delete member.username;
+            delete member.Membership.userId;
+            delete member.Membership.groupId;
+            delete member.Membership.createdAt;
+            delete member.Membership.updatedAt;
+        }
+    
+        return res.json(
+            {
+                Members: result
+            }
+        )
+    }
+
+    const allMembers = await Group.findByPk(req.params.groupId, {
+        include: {
+            model: User,
+            as: "members",
+        }
+    })
+    const jsonMembers = allMembers.toJSON();
+    const result = jsonMembers.members
+    let memberIndex = -1;
+    for (let member of result) {
+        memberIndex += 1
+        if (member.Membership.status === 'pending'){
+            result.splice(memberIndex, 1)
+        }
+        delete member.username;
+        delete member.Membership.userId;
+        delete member.Membership.groupId;
+        delete member.Membership.createdAt;
+        delete member.Membership.updatedAt;
+    }
+
+    res.json(
+        {
+            Members: result
+        }
+    )
+
+    
+})
 
 
 // create event for group based on id
@@ -284,6 +499,52 @@ router.get('/current', requireAuth, async (req, res, next) => {
 })
 
 
+
+// Get group by group id
+router.get(
+    '/:groupId',
+    async (req, res, next) => {
+        let id = req.params.groupId;
+
+        const group = await Group.findByPk(id, {
+            include: [
+                {
+                    model: User,
+                    as: "members"
+                },
+                {
+                    model: GroupImage,
+                    required: false
+                },
+                {
+                    model: User,
+                    as: 'Organizer',
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    model: Venue,
+                    required: false,
+                }
+            ],
+
+        });
+
+        if (group) {
+            const jsonGroup = group.toJSON()
+            jsonGroup.numMembers = group.members.length;
+            delete jsonGroup.members;
+
+            res.json({
+                jsonGroup
+            })
+        } else {
+            const err = new Error()
+            err.status = 404;
+            err.message = "Group couldn't be found";
+            next(err)
+        }
+    })
+
 // GET all groups
 router.get(
     '/',
@@ -337,50 +598,6 @@ router.get(
 )
 
 
-// Get group by group id
-router.get(
-    '/:groupId',
-     async (req, res, next) => {
-        let id = req.params.groupId;
-        
-        const group = await Group.findByPk(id, {
-            include: [
-                {
-                    model: User,
-                    as: "members"
-                },
-                {
-                    model: GroupImage,
-                    required: false
-                },
-                {
-                    model: User,
-                    as: 'Organizer',
-                    attributes: ['id', 'firstName', 'lastName']
-                },
-                {
-                    model: Venue,
-                    required: false,
-                }
-            ],
-            
-        });
-        
-        if (group){
-    const jsonGroup = group.toJSON()
-    jsonGroup.numMembers = group.members.length;
-    delete jsonGroup.members;
-        
-    res.json({
-        jsonGroup
-    })
-    } else {
-        const err = new Error()
-        err.status = 404;
-        err.message = "Group couldn't be found";
-        next(err)
-    }
-})
 
 
 
