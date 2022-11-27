@@ -114,7 +114,7 @@ const isOrganizerOrCoHost = async function (req, res, next) {
             return next(err);
         }
     } else if (req.params.eventId){
-        console.log("theres an event id!")
+        // console.log("theres an event id!")
         const event = await Event.findByPk(req.params.eventId);
         if (event){
             groupId = event.groupId

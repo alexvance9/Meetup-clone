@@ -6,6 +6,9 @@ const { Op } = require('sequelize')
 
 const router = express.Router();
 
+// DRY up some code-- make auth functions here instead of in auth util middleware
+// maybe make membership router...?
+
 // post request for membership to a group
 // creates a new group membership with status of pending
 // requires user auth 
@@ -46,6 +49,99 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
         memberId: newMembership.id,
         status: newMembership.status
     })
+})
+
+// change status of membership for group based on id
+// must be org or cohost
+router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { memberId, status } = req.body;
+    const { user } = req;
+    console.log(user)
+    const group = await Group.findByPk(req.params.groupId);
+    if(!group){
+        const err = new Error('Group could not be found');
+        err.status = 404;
+        return next(err)
+    }
+
+
+    const membership = await Membership.findOne({
+        where: {
+            userId: memberId,
+            groupId: req.params.groupId
+        }
+    })
+    if(!membership){
+        const err = new Error('Membership between user and group does not exist');
+        err.status = 404;
+        return next(err);
+    }
+    if(status === 'pending'){
+        const err = new Error('Validations Error');
+        err.status = 400;
+        err.errors = {
+            status: "cannot change membership status to pending"
+        }
+        return next(err);
+    }
+    
+    const currentUserIsMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: group.id
+        }
+    })
+    
+    if(status === 'member'){
+        if(currentUserIsMember){
+            const jsonMember = currentUserIsMember.toJSON();
+            const memberStatus = jsonMember.status;
+            if(memberStatus !== "organizer" && memberStatus !== "co-host"){
+                const err = new Error('Must be group organizer or cohost');
+                err.status = 401;
+                return next(err)
+            }
+            
+            await membership.update({
+                status
+            })
+
+            const jsonMembership = membership.toJSON();
+            return res.json({
+                id: jsonMembership.id,
+                groupId: jsonMembership.groupId,
+                memberId: jsonMembership.userId,
+                status: jsonMembership.status
+            })
+        }
+        
+    }
+    if(status === 'co-host'){
+        if(currentUserIsMember){
+            const jsonMember = currentUserIsMember.toJSON();
+            const memberStatus = jsonMember.status;
+            if(memberStatus !== "organizer"){
+                const err = new Error('Must be group organizer');
+                err.status = 401;
+                return next(err)
+            }
+            
+            await membership.update({
+                status
+            })
+
+            const jsonMembership = membership.toJSON();
+            return res.json({
+                id: jsonMembership.id,
+                groupId: jsonMembership.groupId,
+                memberId: jsonMembership.userId,
+                status: jsonMembership.status
+            })
+        }
+        
+    }
+    console.log("got here for some reason :(")
+ 
 })
 
 // get all members for groupId

@@ -4,6 +4,13 @@ const { Attendance, EventImage, Event, Group, GroupImage, Membership, User, Venu
 const {Op} = require('sequelize')
 const router = express.Router();
 
+
+// get all attendees of event by id
+// no auth
+router.get('/:eventId/attendees', async (req, res, next) => {
+    
+})
+
 // add image to event based on event id
 // require auth attendee host, or cohost
 router.post('/:eventId/images', requireAuth, async (req, res, next) => {
