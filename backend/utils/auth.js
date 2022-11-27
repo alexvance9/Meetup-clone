@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group, Membership, Venue } = require('../db/models');
+const { Event, User, Group, Membership, Venue } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -113,7 +113,18 @@ const isOrganizerOrCoHost = async function (req, res, next) {
             err.status = 404;
             return next(err);
         }
-    } else {
+    } else if (req.params.eventId){
+        console.log("theres an event id!")
+        const event = await Event.findByPk(req.params.eventId);
+        if (event){
+            groupId = event.groupId
+        } else {
+            const err = new Error("Event couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
+    } 
+    else {
         groupId = req.params.groupId;
     }
 
