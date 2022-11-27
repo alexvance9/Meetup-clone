@@ -1,8 +1,127 @@
 const express = require('express');
 const { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost } = require('../../utils/auth');
 const { Attendance, EventImage, Event, Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
-
+const {Op} = require('sequelize')
 const router = express.Router();
+
+// add image to event based on event id
+// require auth attendee host, or cohost
+router.post('/:eventId/images', requireAuth, async (req, res, next) => {
+    const { eventId } = req.params;
+    const event = await Event.findByPk(eventId);
+    if (!event){
+        const err = new Error("Group couldn't be found");
+        err.status = 404;
+        return next(err)
+    }
+   
+    const {user} = req;
+    const attendance = await Attendance.findOne({
+        where: {
+            eventId: req.params.eventId,
+            userId: user.id,
+            status: {
+                [Op.in]: ['attendee', 'co-host', 'host']
+            }
+        }
+    })
+    if (!attendance){
+        const err = new Error('You do not have permission to add a photo to this event.');
+        err.status = 401;
+        return next(err)
+    }
+    const { url, preview } = req.body;
+    const newEventImage = await EventImage.create({
+        eventId,
+        url,
+        preview
+    })
+    res.json({
+        id: newEventImage.id,
+        url,
+        preview
+    })
+
+})
+
+// edit event by id
+// require organizer or cohost
+router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
+    const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+    const event = await Event.findByPk(req.params.eventId);
+    const venue = await Venue.findByPk(venueId);
+    if(!venue){
+        const err = new Error('Venue could not be found');
+        err.status = 404;
+        return next(err)
+    }
+//    console.log(startDate)
+//    const sDateOnly = startDate.split(' ')[0]
+//    console.log(sDateOnly)
+//    const sTime = new Date(sDateOnly).getTime()
+//    console.log(sTime);
+   
+    await event.update({
+            venueId,
+            name,
+            type,
+            capacity,
+            price,
+            description,
+            startDate, 
+            endDate
+    })
+    
+    res.json(event)
+   
+})
+
+// get details of an event by event id
+router.get('/:eventId', async (req, res, next) => {
+
+    const event = await Event.findByPk(req.params.eventId, {
+        include: [
+            {
+                model: Group,
+                attributes: ['id', 'name', 'city', 'state']
+            },
+            {
+                model: Venue,
+                attributes: ['id', 'address', 'city', 'state', 'lat', 'lng'],
+                required: false,
+            },
+            {
+                model: EventImage,
+                attributes: ['id','url','preview'],
+                required: false
+            }
+        ]
+    })
+
+    if(event){
+    const findNumAttending = async function (eventId) {
+        return await Attendance.count({
+            where: {
+                eventId: eventId
+            }
+        })
+
+    }
+    const jsonEvent = event.toJSON();
+    const numAttending = await findNumAttending(jsonEvent.id)
+    // console.log(numAttending);
+    jsonEvent.numAttending = numAttending;
+    delete jsonEvent.createdAt;
+    delete jsonEvent.updatedAt;
+
+    res.json(jsonEvent)
+    }   else {
+        const err = new Error("Event couldn't be found");
+        err.status = 404;
+        next(err)
+    }
+})
+
 
 // get all events
 router.get('/', async (req, res, next) => {
