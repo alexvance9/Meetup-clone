@@ -16,14 +16,24 @@ module.exports = {
         status: 'host'
       },
       {
-        userId: 2,
+        userId: 1,
         eventId: 2,
+        status: 'host'
+      },
+      {
+        userId: 2,
+        eventId: 3,
         status: 'host'
       },
       {
         userId: 3,
         eventId: 3,
         status: 'pending'
+      },
+      {
+        userId: 3,
+        eventId: 4,
+        status: 'host'
       },
       {
         userId: 4,
@@ -37,7 +47,7 @@ module.exports = {
     options.tableName = 'Attendances';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3, 4] }
+      id: { [Op.in]: [1, 2, 3, 4, 5, 6] }
     });
   }
 };
