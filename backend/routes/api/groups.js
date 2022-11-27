@@ -222,6 +222,7 @@ router.get('/:groupId/members', async (req, res, next) => {
 
 
 // create event for group based on id
+// set status of event creator attendance as host
 router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
     const { groupId}  = req.params;
