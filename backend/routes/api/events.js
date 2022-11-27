@@ -4,11 +4,59 @@ const { Attendance, EventImage, Event, Group, GroupImage, Membership, User, Venu
 const {Op} = require('sequelize')
 const router = express.Router();
 
+const isOrgorCohost = async (req) => {
+    const {user} = req;
+    const event = await Event.findByPk(req.params.eventId);
+    if(!event){
+        const err = new Error('Event could not be found');
+        err.status = 404;
+        return next(err);
+    }
+    const isOorC = await Attendance.findOne({
+        where: {
+            eventId: event.id,
+            userId: user.id,
+            status: {
+                [Op.in]: ['host', 'co-host']
+            }
+        }
+    })
+    if(isOorC) return true;
+    else return false;
+
+}
 
 // get all attendees of event by id
 // no auth
 router.get('/:eventId/attendees', async (req, res, next) => {
+    // console.log(req.user)
     
+    const eventWithAttendees = await Event.findByPk(req.params.eventId, {
+        include: {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }
+    })
+    const jsonEvent = eventWithAttendees.toJSON()
+    const attendees = jsonEvent.Users;
+    // console.log(attendees)
+    const idx = -1;
+    for (let attendee of attendees){
+        // console.log(await isOrgorCohost(req))
+        if(!(await isOrgorCohost(req))){
+           if(attendee.Attendance.status === 'pending')
+            attendees.splice(idx, 1)
+        }
+        delete attendee.Attendance.eventId;
+        delete attendee.Attendance.userId;
+        delete attendee.Attendance.createdAt;
+        delete attendee.Attendance.updatedAt;
+    }
+    // console.log(attendees)
+    
+    res.json({
+        Attendees: attendees
+    })
 })
 
 // add image to event based on event id
