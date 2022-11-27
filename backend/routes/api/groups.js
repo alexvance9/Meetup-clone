@@ -5,6 +5,35 @@ const { json } = require('express');
 
 const router = express.Router();
 
+
+// create event for group based on id
+router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+    const { groupId}  = req.params;
+
+    // const newStartDate = new Date(startDate)
+    // const strStartDate = new String(newStartDate)
+    // const newEndDate = new Date(endDate)
+    // const strStartDate = newStartDate.toDateString()
+    // console.log(strStartDate);
+    
+
+    console.log(groupId, venueId, name, type, capacity, price, description, startDate, endDate)
+    const newEvent = await Event.create({
+        groupId,
+        venueId,
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate,
+        endDate
+    })
+
+    res.json(newEvent);
+})
+
 // get all events for group by groupid
 // no auth
 // REFACTOR PLEASE
@@ -107,7 +136,7 @@ router.post('/:groupId/venues', requireAuth, isOrganizerOrCoHost, async (req, re
         lat,
         lng
     })
-    // why default scope no work
+    // why default scope no work?
     res.json({
         id: newVenue.id,
         groupId: newVenue.groupId,
@@ -145,7 +174,7 @@ router.put('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
     const {name, about, type, private, city, state } = req.body;
 
     const group = await Group.findByPk(req.params.groupId);
-    group.update({
+    await group.update({
         name,
         about,
         type,
