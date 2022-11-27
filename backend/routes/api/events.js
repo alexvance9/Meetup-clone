@@ -1,10 +1,10 @@
 const express = require('express');
 const { setTokenCookie, restoreUser, requireAuth, isOrganizer, isOrganizerOrCoHost } = require('../../utils/auth');
 const { Attendance, EventImage, Event, Group, GroupImage, Membership, User, Venue, sequelize } = require('../../db/models');
-const {Op} = require('sequelize')
+const {Op, json} = require('sequelize')
 const router = express.Router();
 
-const isOrgorCohost = async (req) => {
+const isOrgorCohost = async (req, _res, next) => {
     const {user} = req;
     const event = await Event.findByPk(req.params.eventId);
     if(!event){
@@ -26,6 +26,109 @@ const isOrgorCohost = async (req) => {
 
 }
 
+const isMember = async (req, _res, next) => {
+    const { user } = req;
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+        const err = new Error('Event could not be found');
+        err.status = 404;
+        return next(err);
+    }
+    const jsonEvent = event.toJSON();
+    const isM = await Membership.findOne({
+        where: {
+            groupId: jsonEvent.groupId,
+            userId: user.id
+        }
+    })
+    if(isM) return true;
+    else return false;
+}
+
+// request to attend event by id
+// must be member of group
+router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
+    const {user} = req;
+    if(await isMember(req, res, next)){
+        const attendance = await Attendance.findOne({
+            where: {
+                userId: user.id,
+                eventId: req.params.eventId
+            }
+        })
+        if (attendance){
+            const jsonAttendance = attendance.toJSON()
+            if(jsonAttendance.status === 'pending'){
+                const err = new Error('Attendance has already been requested');
+                err.status = 400;
+                return next(err);
+            } else {
+                const err = new Error('User is already an attendee of the event');
+                err.status = 400;
+                return next(err);
+            }
+        }
+        
+        const newAttendee = await Attendance.create({
+            userId: user.id,
+            eventId: req.params.eventId,
+            status: 'pending'
+        })
+        // console.log(newAttendee)
+
+        return res.json({
+            userId: newAttendee.userId,
+            status: newAttendee.status
+        })
+    }
+})
+
+// change status of attendance for event by id
+// must be o or c
+router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
+    const {user} = req;
+    const { userId, status } = req.body;
+
+    if (!(await isOrgorCohost(req, res, next))){
+        const err = new Error('Must be event host or co-host');
+        err.status = 401;
+        return next(err);
+    }
+    
+    const attendance = await Attendance.findOne({
+        where: {
+            userId: userId,
+            eventId: req.params.eventId
+        }
+    })
+
+    if(!attendance){
+        const err = new Error('Attendance between the user and the event does not exist');
+        err.status = 404;
+        return next(err);
+    }
+    
+
+    if (status === 'pending'){
+        const err = new Error('Cannot change an attendance to pending');
+        err.status = 400;
+        return next(err);
+    }
+
+
+    await attendance.update({
+        status
+    })
+
+    const jsonAttendance = attendance.toJSON();
+    return res.json({
+        id: jsonAttendance.id,
+        eventId: jsonAttendance.eventId,
+        userId: jsonAttendance.userId,
+        status: jsonAttendance.status
+    })
+})
+
 // get all attendees of event by id
 // no auth
 router.get('/:eventId/attendees', async (req, res, next) => {
@@ -43,7 +146,7 @@ router.get('/:eventId/attendees', async (req, res, next) => {
     const idx = -1;
     for (let attendee of attendees){
         // console.log(await isOrgorCohost(req))
-        if(!(await isOrgorCohost(req))){
+        if(!(await isOrgorCohost(req, res, next))){
            if(attendee.Attendance.status === 'pending')
             attendees.splice(idx, 1)
         }
