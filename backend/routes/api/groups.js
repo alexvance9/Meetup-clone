@@ -6,6 +6,47 @@ const { Op } = require('sequelize')
 
 const router = express.Router();
 
+// post request for membership to a group
+// creates a new group membership with status of pending
+// requires user auth 
+router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { user } = req;
+    const group = await Group.findByPk(req.params.groupId)
+    if(!group){
+        const err = new Error('Group could not be found');
+        err.status = 404;
+        return next(err)
+    }
+
+    const isMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId: group.id
+        }
+    })
+    if(isMember){
+        if(isMember.status === "pending"){
+            const err = new Error('Membership has already been requested');
+            err.status = 400;
+            return next(err)
+        } 
+
+        const err = new Error('User is already a member of this group');
+        err.status = 400;
+        return next(err);
+    }
+
+    const newMembership = await Membership.create({
+        userId: user.id,
+        groupId: group.id,
+    })
+
+    console.log(newMembership.toJSON())
+    return res.json({
+        memberId: newMembership.id,
+        status: newMembership.status
+    })
+})
 
 // get all members for groupId
 // no auth requires, but different response for org/cohost
