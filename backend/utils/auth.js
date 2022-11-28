@@ -92,7 +92,7 @@ const isOrganizer = async function (req, res, next) {
     const err = new Error('Must be group organizer');
     err.title = 'Must be group organizer';
     err.errors = ['Must be group organizer'];
-    err.status = 401;
+    err.status = 403;
     return next(err);
 }
 
@@ -152,7 +152,7 @@ const isOrganizerOrCoHost = async function (req, res, next) {
     const err = new Error('Must be group organizer or cohost');
     err.title = 'Must be group organizer or cohost';
     err.errors = ['Must be group organizer or cohost'];
-    err.status = 401;
+    err.status = 403;
     return next(err);
 }
 
