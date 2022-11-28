@@ -82,7 +82,7 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
         })
     } else {
         const err = new Error('User must be member of group to attend event')
-        err.status = 401;
+        err.status = 403;
         return next(err)
     }
 })
@@ -95,7 +95,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
 
     if (!(await isOrgorCohost(req, res, next))){
         const err = new Error('Must be event host or co-host');
-        err.status = 401;
+        err.status = 403;
         return next(err);
     }
     
@@ -195,6 +195,7 @@ router.get('/:eventId/attendees', async (req, res, next) => {
            if(attendee.Attendance.status === 'pending')
             attendees.splice(idx, 1)
         }
+        delete attendee.Attendance.id
         delete attendee.Attendance.eventId;
         delete attendee.Attendance.userId;
         delete attendee.Attendance.createdAt;
@@ -230,7 +231,7 @@ router.post('/:eventId/images', requireAuth, async (req, res, next) => {
     })
     if (!attendance){
         const err = new Error('You do not have permission to add a photo to this event.');
-        err.status = 401;
+        err.status = 403;
         return next(err)
     }
     const { url, preview } = req.body;
@@ -285,8 +286,11 @@ router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) 
             startDate, 
             endDate
     })
+    const jsonEvent = event.toJSON()
+    delete jsonEvent.createdAt
+    delete jsonEvent.updatedAt
     
-    res.json(event)
+    res.json(jsonEvent)
    
 })
 
@@ -297,7 +301,7 @@ router.get('/:eventId', async (req, res, next) => {
         include: [
             {
                 model: Group,
-                attributes: ['id', 'name', 'city', 'state']
+                attributes: ['id', 'name', 'private', 'city', 'state']
             },
             {
                 model: Venue,

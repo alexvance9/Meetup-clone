@@ -133,7 +133,7 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
             const memberStatus = jsonMember.status;
             if(memberStatus !== "organizer" && memberStatus !== "co-host"){
                 const err = new Error('Must be group organizer or cohost');
-                err.status = 401;
+                err.status = 403;
                 return next(err)
             }
             
@@ -157,7 +157,7 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
             const memberStatus = jsonMember.status;
             if(memberStatus !== "organizer"){
                 const err = new Error('Must be group organizer');
-                err.status = 401;
+                err.status = 403;
                 return next(err)
             }
             
@@ -175,7 +175,7 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
         }
         
     }
-    console.log("got here for some reason :(")
+    // console.log("got here for some reason :(")
  
 })
 
@@ -212,6 +212,7 @@ router.get('/:groupId/members', async (req, res, next) => {
         const result = jsonMembers.members
         for (let member of result){
             delete member.username;
+            delete member.Membership.id
             delete member.Membership.userId;
             delete member.Membership.groupId;
             delete member.Membership.createdAt;
@@ -262,13 +263,6 @@ router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
     const { groupId}  = req.params;
     const {user} = req;
-
-    // const newStartDate = new Date(startDate)
-    // const strStartDate = new String(newStartDate)
-    // const newEndDate = new Date(endDate)
-    // const strStartDate = newStartDate.toDateString()
-    // console.log(strStartDate);
-    
 
     // console.log(groupId, venueId, name, type, capacity, price, description, startDate, endDate)
     const newEvent = await Event.create({
@@ -466,7 +460,7 @@ router.delete('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     await group.destroy();
 
-    res.json("Successfully deleted");
+    res.json({message: "Successfully deleted"});
 })
 
 
@@ -573,6 +567,7 @@ router.get(
                 },
                 {
                     model: GroupImage,
+                    attributes: ['id', 'url', 'preview'],
                     required: false
                 },
                 {
@@ -594,7 +589,7 @@ router.get(
             delete jsonGroup.members;
 
             res.json({
-                jsonGroup
+                ...jsonGroup
             })
         } else {
             const err = new Error()
