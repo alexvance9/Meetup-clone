@@ -402,11 +402,22 @@ router.get('/', async (req, res, next) => {
         }
     }
     if(startDate){
-        
+        if (startDate.getTime() === NaN){
+            const err = new Error('Validation Error')
+            err.status = 400;
+            err.errors = {
+                startDate: "start date must be valid date"
+            }
+            return next(err)
+        } 
+        where.startDate = { [Op.startsWith]: startDate}
+        // maybe need to change this to json date and then compare greater
+        // than or equal to... 
     }
     
 
     const events = await Event.findAll({
+        where: where,
         include:[
             {
                 model: Venue,
