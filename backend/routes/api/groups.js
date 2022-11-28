@@ -46,10 +46,45 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
 
     console.log(newMembership.toJSON())
     return res.json({
-        memberId: newMembership.id,
+        memberId: newMembership.userId,
         status: newMembership.status
     })
 })
+
+// delete a membership for a group 
+// user must be the member or org of group
+router.delete('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { user } = req;
+    const { memberId } = req.body;
+    const group = await Group.findByPk(req.params.groupId)
+    if(!group) {
+        const err = new Error('Group could not be found')
+        err.status = 404;
+        return next(err);
+    }
+    const membership = await Membership.findOne({
+        where: {
+            userId: memberId,
+            groupId: group.id
+        }
+    })
+    if(!membership){
+        const err = new Error('Membership between user and group does not exist')
+        err.status = 404;
+        return next(err);
+    }
+    if((user.id === memberId) || (user.id === group.organizerId)){
+        await membership.destroy()
+        return res.json({
+            message: 'successfully deleted membership from group'
+        })
+    }
+
+    const err = new Error('Must be user or group organizer to delete group membership');
+    err.status = 403;
+    return next(err);
+})
+
 
 // change status of membership for group based on id
 // must be org or cohost
@@ -405,6 +440,8 @@ router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next)
     })
 })
 
+
+
 // edit a group
 // current user must be organizer for the group
 router.put('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
@@ -571,6 +608,7 @@ router.get(
 router.get(
     '/',
     async (req, res, next) => {
+        
         
         const allGroups = await Group.findAll({
             include: [

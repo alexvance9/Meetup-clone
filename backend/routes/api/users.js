@@ -47,9 +47,10 @@ router.post(
             const user = await User.signup({ firstName, lastName, email, username, password });
     
             await setTokenCookie(res, user);
-    
+            
+            const jsonUser = user.toJSON()
             return res.json({
-                user: user
+                ...jsonUser
             });
         } catch(err){
             err.message = 'User already exists';

@@ -80,6 +80,10 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
             userId: newAttendee.userId,
             status: newAttendee.status
         })
+    } else {
+        const err = new Error('User must be member of group to attend event')
+        err.status = 401;
+        return next(err)
     }
 })
 
@@ -129,6 +133,42 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
     })
 })
 
+// delete an attendance to an event
+// must be attendee or org/cohost
+router.delete('/:eventId/attendance', requireAuth, async (req, res, next) => {
+    const { user } = req;
+    const { memberId } = req.body;
+    const attendance = await Attendance.findOne({
+        where: {
+            userId: memberId,
+            eventId: req.params.eventId
+        }
+    })
+    if (!attendance){
+        const err = new Error('Attendance does not exist for this user');
+        err.status = 404;
+        return next(err);
+    }
+    const event = await Event.findByPk(req.params.eventId)
+    if(!event){
+        const err = new Error('Event could not be found')
+        err.status = 404;
+        return next(err);
+    }
+    const group = await Group.findByPk(event.groupId)
+    if ((user.id === memberId) || (user.id === group.organizerId)){
+        await attendance.destroy()
+
+       return res.json({
+            message: 'successfully deleted attendance from event'
+        })
+    } else {
+        const err = new Error('Only the User or organizer may delete an attendance')
+        err.status = 403;
+        return next(err);
+    }
+})
+
 // get all attendees of event by id
 // no auth
 router.get('/:eventId/attendees', async (req, res, next) => {
@@ -140,6 +180,11 @@ router.get('/:eventId/attendees', async (req, res, next) => {
             attributes: ['id', 'firstName', 'lastName']
         }
     })
+    if (!eventWithAttendees){
+        const err = new Error('Could not find event');
+        err.status = 404;
+        return next(err)
+    }
     const jsonEvent = eventWithAttendees.toJSON()
     const attendees = jsonEvent.Users;
     // console.log(attendees)
@@ -200,6 +245,17 @@ router.post('/:eventId/images', requireAuth, async (req, res, next) => {
         preview
     })
 
+})
+
+// delete an event by id
+// must be org or cohost
+router.delete('/:eventId', requireAuth, isOrganizerOrCoHost, async (req, res, next) => {
+    const event = await Event.findByPk(req.params.eventId)
+
+    await event.destroy()
+    return res.json({
+        message: 'successfully deleted'
+    })
 })
 
 // edit event by id
@@ -283,6 +339,69 @@ router.get('/:eventId', async (req, res, next) => {
 
 // get all events
 router.get('/', async (req, res, next) => {
+    let { page, size, name, type, startDate } = req.query;
+
+    let pagination = {};
+    if (!size || size > 20){
+        pagination.limit = 20;
+    } else if(size < 1){
+        const err = new Error('Validation Error');
+        err.status = 400;
+        err.errors = {
+            size: 'size must be greater than or equal to 1'
+        }
+        return next(err)
+    } else {
+        pagination.limit = size;
+    }
+    if(!page || page > 10){
+        page = 1
+    } else if (page < 1){
+        const err = new Error('Validation Error');
+        err.status = 400;
+        err.errors = {
+            page: 'page must be greater than or equal to 1'
+        }
+        return next(err)
+    } else {
+        pagination.offset = size * (page - 1)
+    }
+
+    let where = {};
+    if(name){
+        if(typeof name !== "string"){
+            const err = new Error('Validation Error')
+            err.status = 400;
+            err.errors = {
+                name: 'name must be a string'
+            }
+            return next(err)
+        }
+        where.name = name;
+    }
+    if(type){
+        let lcType = type.toLowerCase()
+        if(lcType !== 'online' && lcType !== "inperson"){
+            const err = new Error('Validation Error')
+            err.status = 400;
+            err.errors = {
+                type: "type must be Online or In Person"
+            }
+            return next(err);
+        }
+        
+        if(lcType === 'inperson'){
+            where.type = "In Person"
+        }
+        if(lcType === 'online'){
+            where.type = "Online"
+        }
+    }
+    if(startDate){
+        
+    }
+    
+
     const events = await Event.findAll({
         include:[
             {
@@ -302,7 +421,8 @@ router.get('/', async (req, res, next) => {
                 },
                 required: false
             }
-        ] 
+        ],
+        ...pagination 
     })
 
     const jsonEvents = [];
