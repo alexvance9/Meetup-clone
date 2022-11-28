@@ -226,6 +226,7 @@ router.get('/:groupId/members', async (req, res, next) => {
 router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
     const { groupId}  = req.params;
+    const {user} = req;
 
     // const newStartDate = new Date(startDate)
     // const strStartDate = new String(newStartDate)
@@ -234,7 +235,7 @@ router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res
     // console.log(strStartDate);
     
 
-    console.log(groupId, venueId, name, type, capacity, price, description, startDate, endDate)
+    // console.log(groupId, venueId, name, type, capacity, price, description, startDate, endDate)
     const newEvent = await Event.create({
         groupId,
         venueId,
@@ -247,7 +248,27 @@ router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res
         endDate
     })
 
-    res.json(newEvent);
+    const isHost = await Attendance.create({
+        userId: user.id,
+        eventId: newEvent.id,
+        status: 'host'
+    })
+    // console.log(isHost)
+
+    const jsonEvent = newEvent.toJSON()
+
+    res.json({
+        id: jsonEvent.id,
+        groupId: jsonEvent.groupId,
+        venueId: jsonEvent.venueId,
+        name: jsonEvent.name,
+        type: jsonEvent.type,
+        capacity: jsonEvent.capacity,
+        price: jsonEvent.price,
+        description: jsonEvent.description,
+        startDate: jsonEvent.startDate,
+        endDate: jsonEvent.endDate
+    });
 })
 
 // get all events for group by groupid
@@ -434,7 +455,7 @@ router.post('/', requireAuth, async (req, res, next) => {
             groupId: newGroup.id,
             status: "organizer"
         })
-        console.log(newMembership);
+        // console.log(newMembership);
     
         res.json(newGroup)
     } catch (err) {
