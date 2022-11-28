@@ -405,6 +405,8 @@ router.post('/:groupId/images', requireAuth, isOrganizer, async (req, res, next)
     })
 })
 
+
+
 // edit a group
 // current user must be organizer for the group
 router.put('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {

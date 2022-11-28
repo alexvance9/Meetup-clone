@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const eventsRouter = require('./events.js');
+const eventImgRouter = require('./event-images.js')
 const groupsRouter = require('./groups.js');
+const groupImgRouter = require('./group-images.js')
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const venuesRouter = require('./venues');
@@ -13,7 +15,9 @@ router.use(restoreUser);
 
 
 router.use('/events', eventsRouter);
+router.use('/event-images', eventImgRouter);
 router.use('/groups', groupsRouter);
+router.use('/group-images', groupImgRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/venues', venuesRouter);
