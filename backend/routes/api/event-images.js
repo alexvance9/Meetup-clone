@@ -1,7 +1,7 @@
 const express = require('express');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { Attendance, EventImage, Event, Group, GroupImage, Membership, User, sequelize } = require('../../db/models');
-const { Op, json } = require('sequelize')
+const { Op } = require('sequelize')
 
 const router = express.Router();
 
@@ -9,13 +9,16 @@ const router = express.Router();
 // must be organizer or cohost of group event belongs to?
 router.delete('/:imageId', requireAuth, async (req, res, next) => {
     const { user } = req;
+    
     const image = await EventImage.findByPk(req.params.imageId);
     if(!image){
         const err = new Error('Event image could not be found');
         err.status = 404;
         return next(err);
     }
+
     const event = await Event.findByPk(image.eventId);
+
     const isOrgOrCohost = await Membership.findOne({
         where: {
             userId: user.id,
@@ -33,7 +36,7 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
 
     await image.destroy()
 
-    res.json({
+   return res.json({
         message: 'Successfully deleted'
     })
 })

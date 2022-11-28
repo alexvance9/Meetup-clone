@@ -46,10 +46,14 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
 
     console.log(newMembership.toJSON())
     return res.json({
-        memberId: newMembership.id,
+        memberId: newMembership.userId,
         status: newMembership.status
     })
 })
+
+// delete a membership for a group 
+// user must be the member or org of group
+
 
 // change status of membership for group based on id
 // must be org or cohost
@@ -573,6 +577,7 @@ router.get(
 router.get(
     '/',
     async (req, res, next) => {
+        
         
         const allGroups = await Group.findAll({
             include: [

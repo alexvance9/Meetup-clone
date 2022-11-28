@@ -24,13 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       )
       Event.hasMany(
         models.EventImage,
-        {foreignKey: 'eventId'}
+        {foreignKey: 'eventId', onDelete: 'cascade', hooks: true}
       )
     }
   }
   Event.init({
     venueId: {
-      allowNull: false,
       type:DataTypes.INTEGER,
     },
     groupId: {
