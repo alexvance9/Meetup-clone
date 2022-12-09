@@ -44,7 +44,7 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
         groupId: group.id,
     })
 
-    console.log(newMembership.toJSON())
+    // console.log(newMembership.toJSON())
     return res.json({
         memberId: newMembership.userId,
         status: newMembership.status
@@ -91,7 +91,7 @@ router.delete('/:groupId/membership', requireAuth, async (req, res, next) => {
 router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
     const { memberId, status } = req.body;
     const { user } = req;
-    console.log(user)
+    // console.log(user)
     const group = await Group.findByPk(req.params.groupId);
     if(!group){
         const err = new Error('Group could not be found');
@@ -350,7 +350,7 @@ router.get('/:groupId/events', async (req, res, next) => {
         const jsonEvent = event.toJSON();
 
         const numAttending = await findNumAttending(jsonEvent.id);
-        console.log(numAttending);
+        // console.log(numAttending);
         jsonEvent.numAttending = numAttending;
 
         if(event.EventImages.length){
@@ -468,8 +468,8 @@ router.delete('/:groupId', requireAuth, isOrganizer, async (req, res, next) => {
 router.post('/', requireAuth, async (req, res, next) => {
     const {user} = req;
     const { name, about, type, private, city, state } = req.body;
-    console.log(about)
-    console.log(type)
+    // console.log(about)
+    // console.log(type)
 
     try {
         const newGroup = await Group.create({

@@ -454,7 +454,7 @@ router.get('/', async (req, res, next) => {
         const jsonEvent = event.toJSON();
 
         const numAttending = await findNumAttending(jsonEvent.id);
-        console.log(numAttending);
+        // console.log(numAttending);
         jsonEvent.numAttending = numAttending;
 
         if (event.EventImages.length) {
