@@ -41,7 +41,7 @@ router.post(
 
         const jsonUser = user.toJSON()
         return res.json({
-            ...jsonUser
+            user: jsonUser
         });
     }
 );
