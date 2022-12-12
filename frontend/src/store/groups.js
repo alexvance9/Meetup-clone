@@ -23,7 +23,7 @@ const groupsReducer = (state = initialState, action) => {
     let newState;
     switch (action.type) {
         case GET_GROUPS:
-            newState = {...state}
+            newState = {...state, allGroups: {...state.allGroups}}
             action.groups.Groups.forEach(group => newState.allGroups[group.id] = group)
             return newState;
         default:
