@@ -10,9 +10,11 @@ const getAllGroups = (groups) => {
 
 export const thunkGetAllGroups = () => async (dispatch) => {
     const response = await fetch('/api/groups');
-    const groups = await response.json();
-    dispatch(getAllGroups(groups))
-    return groups;
+    if (response.ok){
+        const groups = await response.json();
+        dispatch(getAllGroups(groups))
+        return groups;
+    }
 }
 
 const initialState = {allGroups: {}, singleGroup: {}}

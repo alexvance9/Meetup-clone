@@ -1,4 +1,4 @@
-import ShowGroups from "./ShowGroup"
+import ShowGroups from "../ShowGroups"
 
 const GroupComponents = () => {
     return (
