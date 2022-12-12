@@ -13,7 +13,6 @@ const ShowGroups = () => {
        dispatch(thunkGetAllGroups()); 
     }, [dispatch])
     
-    console.log("groups after refresh:", groupsArray) 
 
     if (!groups) {
         return null;
