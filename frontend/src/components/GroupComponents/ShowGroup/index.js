@@ -6,6 +6,7 @@ import GroupCard from '../GroupCard';
 const ShowGroups = () => {
     const dispatch = useDispatch();
     const groups = useSelector(state => state.groups.allGroups);
+    console.log(groups)
 
     const groupsArray = [...Object.values(groups)]
     // console.log(groupsArray)
