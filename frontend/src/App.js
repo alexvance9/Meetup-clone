@@ -5,6 +5,7 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import HomePage from "./components/HomePage";
 import SplashPage from "./components/SplashPage";
+import GroupDetails from "./components/GroupDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
+          <Route path='/groups/:groupId'>
+            <GroupDetails />
+          </Route>
           <Route path='/home'>
             <HomePage />
           </Route>
