@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { thunkGetAllGroups } from '../../store/groups'
 import GroupCard from '../GroupCard';
+import './ShowGroups.css'
 
 const ShowGroups = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const ShowGroups = () => {
     }
     
     return (
-        <div>
+        <div className='cards-container'>
             {groupsArray.map(group => (
                 <GroupCard group={group} key={group.id}/>
             ))}

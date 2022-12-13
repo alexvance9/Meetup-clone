@@ -1,4 +1,4 @@
-
+import './GroupCard.css'
 
 const GroupCard = ({ group }) => {
     

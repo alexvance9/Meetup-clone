@@ -2,8 +2,11 @@ import GroupComponents from "../GroupComponents";
 
 const HomePage = () => {
     return (
-        <GroupComponents />
-        // {/*To Do: events components*/}
+        <div className="body">
+            <GroupComponents />
+        </div>
+
+            // {/*To Do: events components*/}
     )
 }
 
