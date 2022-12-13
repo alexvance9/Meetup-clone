@@ -1,6 +1,7 @@
 //////// action variables ////////////
 const GET_GROUPS = 'groups/getAllGroups';
 const GET_GROUP_DETAILS = 'groups/getGroupDetails';
+const CREATE_GROUP = 'groups/createGroup';
 
 ////////// action creators ///////////
 const getAllGroups = (groups) => {
@@ -13,6 +14,13 @@ const getAllGroups = (groups) => {
 const getGroupDetails = (group) => {
     return {
         type: GET_GROUP_DETAILS,
+        group
+    }
+}
+
+const createGroup = (group) => {
+    return {
+        type: CREATE_GROUP,
         group
     }
 }
@@ -32,16 +40,43 @@ export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
     if (response.ok) {
         const group = await response.json();
         dispatch(getGroupDetails(group));
+        group.ok = true;
         return group;
     } else {
-        const errors = response.json();
-        return errors;
+        // const errors = await response.json();
+        // return errors;
+        return response;
+    }
+}
+
+export const thunkCreateGroup = (group) => async (dispatch) => {
+    const { name, about, type, isPrivate, city, state } = group;
+    const response = await fetch('/api/groups', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: {
+            name,
+            about,
+            type,
+            private: isPrivate,
+            city,
+            state
+        }
+    })
+    if (response.ok) {
+        const newGroup = await response.json()
+        dispatch(createGroup(newGroup))
+        return newGroup
+    } else {
+        return response;
     }
 }
 
 
 //////////// REDUCER ////////////////////
-const initialState = {allGroups: {}, singleGroup: {}}
+const initialState = {allGroups: {}, singleGroup: {GroupImages: [], Organizer: {}, Venues: []}}
 
 const groupsReducer = (state = initialState, action) => {
     let newState;
@@ -51,8 +86,9 @@ const groupsReducer = (state = initialState, action) => {
             action.groups.Groups.forEach(group => newState.allGroups[group.id] = group)
             return newState;
         case GET_GROUP_DETAILS: 
-            newState = {...state, allGroups: {...state.allGroups}, singleGroup: {...state.singleGroup}}
-            newState.singleGroup = action.group
+            newState = {...state, allGroups: {...state.allGroups}, singleGroup: {...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues]}}
+
+            newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
             return newState;
         default:
             return state;
