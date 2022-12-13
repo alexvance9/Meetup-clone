@@ -90,6 +90,13 @@ const groupsReducer = (state = initialState, action) => {
 
             newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
             return newState;
+        case CREATE_GROUP:
+            newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues]}}
+
+            newState.allGroups[action.group.id] = action.group;
+            newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
+            
+            return newState;
         default:
             return state;
     }
