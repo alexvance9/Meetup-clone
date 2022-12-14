@@ -1,9 +1,16 @@
 .group-card {
     display: flex;
     box-sizing: border-box;
+    border: solid red 2px;
+    height: 25vh
 }
 
 a {
     color: inherit;
     text-decoration: inherit;
+}
+
+.preview-image {
+    border: 2px solid rgb(18, 233, 240);
+    height: 80%;
 }

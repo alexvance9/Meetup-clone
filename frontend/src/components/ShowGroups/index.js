@@ -22,7 +22,7 @@ const ShowGroups = () => {
     return (
         <div className='cards-container'>
             {groupsArray.map(group => (
-                <GroupCard group={group} key={group.id}/>
+                <GroupCard group={group} key={group.id} />
             ))}
         </div>
     )

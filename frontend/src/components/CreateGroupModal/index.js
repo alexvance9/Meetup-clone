@@ -15,31 +15,31 @@ function CreateGroupModal() {
     const [isPrivate, setIsPrivate] = useState(false);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
+    const [previewImageURL, setPreviewImageURL] = useState("")
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = [];
         if (name.length > 60) errors.push("Name must be 60 characters or less");
         if (about.length < 50) errors.push("About must be 50 characters or more");
         if (!city) errors.push("City is required");
         if (!state) errors.push("State is required");
+        if (!previewImageURL) errors.push("Preview Image is required");
         
         if (!errors.length) {
             setErrors([]);
+            const newGroup = await dispatch(thunkCreateGroup({ name, about, type, isPrivate, city, state, previewImageURL }))
 
-            // change this around, await dispatch... etc
-            return dispatch(thunkCreateGroup({ name, about, type, isPrivate, city, state }))
-                // .then( (group) => console.log(group))
-                .then(closeModal)
-                .catch(async (res) => {
-                    const data = await res.json();
-                    if (data && data.errors) setErrors(data.errors);
-                })
-
+            if(newGroup.ok){
+                console.log('new group: ', newGroup)
+                closeModal()
+                return history.push(`/groups/${newGroup.id}`)
+            } else {
+                return setErrors(errors);
+            }
         }
-        return setErrors(errors);
     };
 
     return (
@@ -110,6 +110,15 @@ function CreateGroupModal() {
                         onChange={(e) => setState(e.target.value)}
                         required
                     />
+                </label>
+                <label>
+                    Preview Image
+                    <input
+                        type="text"
+                        value={previewImageURL}
+                        onChange={(e) => setPreviewImageURL(e.target.value)}
+                        required
+                    ></input>
                 </label>
                 <button type="submit">Create Group</button>
             </form>

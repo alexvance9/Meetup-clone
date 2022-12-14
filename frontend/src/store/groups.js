@@ -29,7 +29,7 @@ const createGroup = (group) => {
 
 //////////// THUNK action creators ////////////////
 export const thunkGetAllGroups = () => async (dispatch) => {
-    const response = await fetch('/api/groups');
+    const response = await csrfFetch('/api/groups');
     if (response.ok){
         const groups = await response.json();
         dispatch(getAllGroups(groups))
@@ -38,7 +38,7 @@ export const thunkGetAllGroups = () => async (dispatch) => {
 }
 
 export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
-    const response = await fetch(`/api/groups/${groupId}`);
+    const response = await csrfFetch(`/api/groups/${groupId}`);
     if (response.ok) {
         const group = await response.json();
         dispatch(getGroupDetails(group));
@@ -52,7 +52,7 @@ export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
 }
 
 export const thunkCreateGroup = (group) => async (dispatch) => {
-    const { name, about, type, isPrivate, city, state } = group;
+    const { name, about, type, isPrivate, city, state, previewImageURL } = group;
     const newGroupReq = {
         name,
         about,
@@ -61,6 +61,11 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
         city,
         state
     }
+    const newPreviewImgReq = {
+        url: previewImageURL,
+        preview: true
+    }
+
     const response = await csrfFetch('/api/groups', {
         method: 'POST',
         headers: {
@@ -70,8 +75,18 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
     })
     if (response.ok) {
         const newGroup = await response.json()
-        dispatch(createGroup(newGroup))
-        return newGroup
+        const imgResponse = await csrfFetch(`/api/groups/${newGroup.id}/images`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newPreviewImgReq)
+        })
+        if (imgResponse.ok) {
+            dispatch(createGroup(newGroup))
+            newGroup.ok = true;
+            return newGroup;
+        }
     } else {
         return response;
     }
@@ -97,7 +112,7 @@ const groupsReducer = (state = initialState, action) => {
             newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues]}}
 
             newState.allGroups[action.group.id] = action.group;
-            newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
+            // newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
             
             return newState;
         default:
