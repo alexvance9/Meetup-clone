@@ -16,7 +16,7 @@ a {
     height: 80%;
 }
 
-img {
+.preview-image > img {
     border: 3px pink solid;
     box-sizing: border-box;
     object-fit: contain;

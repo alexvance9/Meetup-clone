@@ -100,18 +100,18 @@ const groupsReducer = (state = initialState, action) => {
     
     switch (action.type) {
         case GET_GROUPS:{
-            const newState = {...state, allGroups: {...state.allGroups}}
+            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
             action.groups.Groups.forEach(group => newState.allGroups[group.id] = group)
             return newState;
         }
         case GET_GROUP_DETAILS: {
-            const newState = {...state, allGroups: {...state.allGroups}, singleGroup: {...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues]}}
+            const newState = { ...state, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
 
             newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
             return newState;
         }
         case CREATE_GROUP:{
-            const newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues]}}
+            const newState = { ...state, allGroups: { ...state.allGroups }}
 
             newState.allGroups[action.group.id] = action.group;
             // newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
