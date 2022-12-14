@@ -97,24 +97,27 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
 const initialState = {allGroups: {}, singleGroup: {GroupImages: [], Organizer: {}, Venues: []}}
 
 const groupsReducer = (state = initialState, action) => {
-    let newState;
+    
     switch (action.type) {
-        case GET_GROUPS:
-            newState = {...state, allGroups: {...state.allGroups}}
+        case GET_GROUPS:{
+            const newState = {...state, allGroups: {...state.allGroups}}
             action.groups.Groups.forEach(group => newState.allGroups[group.id] = group)
             return newState;
-        case GET_GROUP_DETAILS: 
-            newState = {...state, allGroups: {...state.allGroups}, singleGroup: {...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues]}}
+        }
+        case GET_GROUP_DETAILS: {
+            const newState = {...state, allGroups: {...state.allGroups}, singleGroup: {...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues]}}
 
             newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
             return newState;
-        case CREATE_GROUP:
-            newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues]}}
+        }
+        case CREATE_GROUP:{
+            const newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues]}}
 
             newState.allGroups[action.group.id] = action.group;
             // newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
             
             return newState;
+        }
         default:
             return state;
     }
