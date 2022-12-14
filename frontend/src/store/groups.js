@@ -1,3 +1,5 @@
+import { csrfFetch } from './csrf';
+
 //////// action variables ////////////
 const GET_GROUPS = 'groups/getAllGroups';
 const GET_GROUP_DETAILS = 'groups/getGroupDetails';
@@ -51,19 +53,20 @@ export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
 
 export const thunkCreateGroup = (group) => async (dispatch) => {
     const { name, about, type, isPrivate, city, state } = group;
-    const response = await fetch('/api/groups', {
+    const newGroupReq = {
+        name,
+        about,
+        type,
+        private: isPrivate,
+        city,
+        state
+    }
+    const response = await csrfFetch('/api/groups', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
-        body: {
-            name,
-            about,
-            type,
-            private: isPrivate,
-            city,
-            state
-        }
+        body: JSON.stringify(newGroupReq)
     })
     if (response.ok) {
         const newGroup = await response.json()
