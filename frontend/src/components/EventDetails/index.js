@@ -34,7 +34,7 @@ const EventDetails = () => {
             <div className="event-details-body">
                 <div className="event-details-body-left">
                     <div className="event-detail-preview-image">
-                        <img alt={eventDetails.name} src={previewImage.url} />
+                        <img src={previewImage ? previewImage.url : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"} alt={eventDetails.name} />
                     </div>
                     <div className="event-details-description">
                         <h3>Details</h3>
@@ -56,10 +56,10 @@ const EventDetails = () => {
                                End Date: {eventDetails.endDate}
                             </span>
                         </div>
-                        <div className="event-venue">
+                        {/* <div className="event-venue">
                             <span>{eventDetails.Venue.address}</span>
                             <span>{eventDetails.Venue.city}, {eventDetails.Venue.state}</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

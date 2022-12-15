@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import HomePage from "./components/HomePage";
 import SplashPage from "./components/SplashPage";
 import GroupDetails from "./components/GroupDetails";
+import EventDetails from "./components/EventDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,11 +20,17 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
+          <Route path='/events/:eventId'>
+            <EventDetails />
+          </Route>
           <Route path='/groups/:groupId'>
             <GroupDetails />
           </Route>
-          <Route path='/home'>
-            <HomePage />
+          <Route path={['/events']}>
+            <HomePage isEvent={true}/>
+          </Route>
+          <Route path={['/home', '/groups']}>
+            <HomePage isEvent={false}/>
           </Route>
           <Route exact path='/'>
             <SplashPage />

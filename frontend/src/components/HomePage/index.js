@@ -2,12 +2,13 @@ import { useState } from "react";
 import GroupComponents from "../GroupComponents";
 import EventComponents from "../EventComponents";
 
-const HomePage = () => {
+const HomePage = ({isEvent}) => {
     // two buttons groups and events
     // renders group or event components depending on what is clicked
     // default to groups
-    const [ isEvents, setIsEvents ] = useState(false);
-
+    // console.log(isEvent)
+    const [ isEvents, setIsEvents ] = useState(isEvent);
+    
 
     const groupClick = (e) => {
         e.preventDefault();

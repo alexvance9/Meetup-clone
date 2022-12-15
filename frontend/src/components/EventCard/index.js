@@ -1,4 +1,4 @@
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const EventCard = ({ event }) => {
     
@@ -7,7 +7,8 @@ const EventCard = ({ event }) => {
     const eventDate = new Date(event.startDate).toUTCString();
     
     return (
-        
+        <NavLink to={`/events/${event.id}`}>
+
         <div className="event-card">
             <div className="preview-image">
                 <img src={event.previewImage ? event.previewImage : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"} alt={event.name} />
@@ -24,6 +25,7 @@ const EventCard = ({ event }) => {
                 </div>
             </div>
         </div>
+        </NavLink>
     )
 }
 export default EventCard;

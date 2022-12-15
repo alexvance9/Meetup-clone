@@ -6,6 +6,7 @@ import  OpenModalButton  from '../OpenModalButton';
 import  EditGroupModal  from '../EditGroupModal';
 import DeleteGroupModal from "../DeleteGroupModal";
 import './GroupDetails.css'
+import CreateEventModal from "../CreateEventModal";
 
 const GroupDetails = () => {
     let { groupId } = useParams();
@@ -40,6 +41,12 @@ const GroupDetails = () => {
                     <OpenModalButton
                         buttonText="Delete Group"
                         modalComponent={ <DeleteGroupModal currentGroupId={groupId}/>}
+                    />
+                </div>
+                <div className="create-event-button">
+                    <OpenModalButton
+                    buttonText="Add an Event"
+                    modalComponent={<CreateEventModal currentGroupId={groupId} />}
                     />
                 </div>
             </div>

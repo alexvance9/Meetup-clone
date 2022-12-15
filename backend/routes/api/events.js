@@ -460,7 +460,7 @@ router.get('/', async (req, res, next) => {
         if (event.EventImages.length) {
             jsonEvent.previewImage = event.EventImages[0].url
         } else {
-            jsonEvent.previewImage = "No preview image provided"
+            jsonEvent.previewImage = false;
         }
         delete jsonEvent.EventImages;
         delete jsonEvent.createdAt;
