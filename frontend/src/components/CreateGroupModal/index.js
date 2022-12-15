@@ -35,11 +35,11 @@ function CreateGroupModal() {
                 // console.log('new group: ', newGroup)
                 closeModal()
                 return history.push(`/groups/${newGroup.id}`)
-            } else {
-                return setErrors(errors);
-            }
+            } 
         }
+        return setErrors(errors);
     };
+            
 
     return (
         <>
