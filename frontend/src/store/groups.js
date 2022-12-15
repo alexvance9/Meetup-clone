@@ -143,6 +143,7 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
     if (response.ok) {
         dispatch(deleteGroup())
         const message = await response.json()
+        message.ok = true;
         return message;
     } else {
         return response;

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { thunkGetGroupDetails } from "../../store/groups";
 import  OpenModalButton  from '../OpenModalButton';
 import  EditGroupModal  from '../EditGroupModal';
+import DeleteGroupModal from "../DeleteGroupModal";
 
 const GroupDetails = () => {
     let { groupId } = useParams();
@@ -37,7 +38,7 @@ const GroupDetails = () => {
                 <div className="delete-group-button">
                     <OpenModalButton
                         buttonText="Delete Group"
-                        modalComponent={''}
+                        modalComponent={ <DeleteGroupModal currentGroupId={groupId}/>}
                     />
                 </div>
             </div>
