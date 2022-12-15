@@ -5,6 +5,7 @@ import ProfileButton from './ProfileButton';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import CreateGroupModal from '../CreateGroupModal'
 import './Navigation.css';
 import logo from '../../assets/logo.jpeg'
 
@@ -15,13 +16,19 @@ function Navigation({ isLoaded }) {
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
-            <span>
+            <div className="logged-in-nav">
+                <div className="create-group-button">
+                    <OpenModalButton
+                        buttonText="Create New Group"
+                        modalComponent={<CreateGroupModal />}
+                    />
+                </div>
                 <ProfileButton user={sessionUser} />
-            </span>
+            </div>
         );
     } else {
         sessionLinks = (
-            <span>
+            <div className="logged-out-nav">
                 <OpenModalButton
                     buttonText="Log In"
                     modalComponent={<LoginFormModal />}
@@ -30,7 +37,7 @@ function Navigation({ isLoaded }) {
                     buttonText="Sign Up"
                     modalComponent={<SignupFormModal />}
                 />
-            </span>
+            </div>
         );
     }
 

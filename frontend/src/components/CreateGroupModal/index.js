@@ -32,7 +32,7 @@ function CreateGroupModal() {
             const newGroup = await dispatch(thunkCreateGroup({ name, about, type, isPrivate, city, state, previewImageURL }))
 
             if(newGroup.ok){
-                console.log('new group: ', newGroup)
+                // console.log('new group: ', newGroup)
                 closeModal()
                 return history.push(`/groups/${newGroup.id}`)
             } else {
