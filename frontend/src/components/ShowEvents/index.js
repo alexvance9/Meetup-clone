@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetAllEvents } from "../../store/events";
+import EventCard from "../EventCard";
 
 
 const ShowEvents = () => {
@@ -20,7 +21,7 @@ const ShowEvents = () => {
     }
 
     return (
-        <div>
+        <div className="cards-container">
             {eventsArray.map(event => (
                 <EventCard event={event} key={event.id} />
             ))}
@@ -28,4 +29,4 @@ const ShowEvents = () => {
     )
 }
 
-export default ShowEvents
+export default ShowEvents;

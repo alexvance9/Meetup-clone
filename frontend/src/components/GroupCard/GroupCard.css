@@ -31,12 +31,12 @@ a {
     justify-content: space-around;
 }
 
-.card-header {
+.group-card-header {
     box-sizing: border-box;
     border: 2px solid magenta
 }
 
-.card-header > h3 {
+.group-card-header > h3 {
     border: 2px solid yellow;
     margin: auto;
 }
@@ -44,6 +44,6 @@ a {
     box-sizing: border-box;
 }
 
-.card-footer {
+.group-card-footer {
     box-sizing: border-box;
 }
