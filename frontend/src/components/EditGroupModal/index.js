@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { thunkCreateGroup } from '../../store/groups';
+import { thunkEditGroup } from '../../store/groups';
 
 
-function CreateGroupModal() {
+function EditGroupModal({ currentGroup }) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const [name, setName] = useState("");
-    const [about, setAbout] = useState("");
-    const [type, setType] = useState("In person");
-    const [isPrivate, setIsPrivate] = useState(false);
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [previewImageURL, setPreviewImageURL] = useState("")
+    // console.log(currentGroup)
+
+    const [name, setName] = useState(currentGroup.name);
+    const [about, setAbout] = useState(currentGroup.about);
+    const [type, setType] = useState(currentGroup.type);
+    const [isPrivate, setIsPrivate] = useState(currentGroup.private);
+    const [city, setCity] = useState(currentGroup.city);
+    const [state, setState] = useState(currentGroup.state);
+    
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
@@ -25,16 +27,15 @@ function CreateGroupModal() {
         if (about.length < 50) errors.push("About must be 50 characters or more");
         if (!city) errors.push("City is required");
         if (!state) errors.push("State is required");
-        if (!previewImageURL) errors.push("Preview Image is required");
-        
+
         if (!errors.length) {
             setErrors([]);
-            const newGroup = await dispatch(thunkCreateGroup({ name, about, type, isPrivate, city, state, previewImageURL }))
+            const updatedGroup = await dispatch(thunkEditGroup({ name, about, type, isPrivate, city, state }, currentGroup.id))
 
-            if(newGroup.ok){
-                console.log('new group: ', newGroup)
+            if (updatedGroup.ok) {
+                // console.log('new group: ', updatedGroup)
                 closeModal()
-                return history.push(`/groups/${newGroup.id}`)
+                return history.push(`/groups/${updatedGroup.id}`)
             } else {
                 return setErrors(errors);
             }
@@ -43,7 +44,7 @@ function CreateGroupModal() {
 
     return (
         <>
-            <h1>Create New Group</h1>
+            <h1>Edit Group</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
@@ -110,19 +111,10 @@ function CreateGroupModal() {
                         required
                     />
                 </label>
-                <label>
-                    Preview Image
-                    <input
-                        type="text"
-                        value={previewImageURL}
-                        onChange={(e) => setPreviewImageURL(e.target.value)}
-                        required
-                    ></input>
-                </label>
-                <button type="submit">Create Group</button>
+                <button type="submit">Submit Changes</button>
             </form>
         </>
     );
 }
 
-export default CreateGroupModal;
+export default EditGroupModal;

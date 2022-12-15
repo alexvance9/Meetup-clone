@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetGroupDetails } from "../../store/groups";
+import  OpenModalButton  from '../OpenModalButton';
+import  EditGroupModal  from '../EditGroupModal';
 
 const GroupDetails = () => {
     let { groupId } = useParams();
@@ -20,13 +22,33 @@ const GroupDetails = () => {
        })()
     }, [dispatch, groupId])
 
-    // console.log('fetched group details: ', groupDetails)
-    // console.log(isLoaded)
+    //    session edit and delete group buttons if current user is organizer
+    const sessionUser = useSelector(state => state.session.user);
+    let sessionLinks;
+    if (sessionUser && sessionUser.id === groupDetails.organizerId){
+        sessionLinks = (
+            <div className="session-group-buttons">
+                <div className="edit-group-button">
+                    <OpenModalButton
+                        buttonText="Edit Group"
+                        modalComponent={<EditGroupModal currentGroup={groupDetails} />}
+                    />
+                </div>
+                <div className="delete-group-button">
+                    <OpenModalButton
+                        buttonText="Delete Group"
+                        modalComponent={''}
+                    />
+                </div>
+            </div>
+        )
+    }
 
    if (!isLoaded) return (<span>That Group doesn't exist yet!</span>);
 //    find the preview image in the groupimages array since previewimage doesn't come back with group details
 
    const previewImage = groupDetails.GroupImages.find(image => image.preview === true)
+
 
     return (
         <>
@@ -41,11 +63,12 @@ const GroupDetails = () => {
                     <h3>{groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</h3>
                     <h3>Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</h3>
                 </div>
+            </div>
+                {sessionLinks}
                 <div className='group-about'>
                     <h2>What we're about</h2>
                     <p>{groupDetails.about}</p>
                 </div>
-            </div>
         </div>
         </>
     )

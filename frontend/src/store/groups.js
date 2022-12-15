@@ -4,6 +4,9 @@ import { csrfFetch } from './csrf';
 const GET_GROUPS = 'groups/getAllGroups';
 const GET_GROUP_DETAILS = 'groups/getGroupDetails';
 const CREATE_GROUP = 'groups/createGroup';
+const EDIT_GROUP = 'groups/editGroup';
+const DELETE_GROUP = 'groups/deleteGroup';
+
 
 ////////// action creators ///////////
 const getAllGroups = (groups) => {
@@ -24,6 +27,19 @@ const createGroup = (group) => {
     return {
         type: CREATE_GROUP,
         group
+    }
+}
+
+const editGroup = (group) => {
+    return {
+        type: EDIT_GROUP,
+        group
+    }
+} 
+
+const deleteGroup = () => {
+    return {
+        type: DELETE_GROUP
     }
 }
 
@@ -93,6 +109,47 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
 }
 
 
+export const thunkEditGroup = (group, groupId) => async (dispatch) => {
+    const { name, about, type, isPrivate, city, state } = group;
+    const updateRequest = {
+        name,
+        about,
+        type,
+        private: isPrivate,
+        city,
+        state
+    }
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updateRequest)
+    })
+    if (response.ok) {
+        const updatedGroup = await response.json()
+        dispatch(editGroup(updatedGroup))
+        updatedGroup.ok = true;
+        return updatedGroup;
+    } else {
+        return response;
+    }
+}
+
+export const thunkDeleteGroup = (groupId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'DELETE'
+    })
+    if (response.ok) {
+        dispatch(deleteGroup())
+        const message = await response.json()
+        return message;
+    } else {
+        return response;
+    }
+}
+
+
 //////////// REDUCER ////////////////////
 const initialState = {allGroups: {}, singleGroup: {GroupImages: [], Organizer: {}, Venues: []}}
 
@@ -105,7 +162,7 @@ const groupsReducer = (state = initialState, action) => {
             return newState;
         }
         case GET_GROUP_DETAILS: {
-            const newState = { ...state, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
+            const newState = { ...state, allGroups: {...state.allGroups}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
 
             newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
             return newState;
@@ -113,9 +170,18 @@ const groupsReducer = (state = initialState, action) => {
         case CREATE_GROUP:{
             const newState = { ...state, allGroups: { ...state.allGroups }}
 
-            newState.allGroups[action.group.id] = action.group;
-            // newState.singleGroup = { ...action.group, GroupImages: [...action.group.GroupImages], Organizer: { ...action.group.Organizer }, Venues: [...action.group.Venues] }
+            newState.allGroups[action.group.id] = action.group;            
+            return newState;
+        }
+        case EDIT_GROUP: {
+            const newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues] } };
             
+            newState.singleGroup = { ...action.group, numMembers: newState.singleGroup.numMembers, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues] }
+
+            return newState;
+        }
+        case DELETE_GROUP: {
+            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
             return newState;
         }
         default:
