@@ -1,0 +1,49 @@
+.group-card {
+    display: flex;
+    box-sizing: border-box;
+    border: solid red 2px;
+    height: 25vh
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.preview-image {
+    box-sizing: border-box;
+    border: 2px solid rgb(18, 233, 240);
+    height: 80%;
+}
+
+.preview-image > img {
+    border: 3px pink solid;
+    box-sizing: border-box;
+    object-fit: contain;
+    height: 100%;
+}
+
+.group-card-flex-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border: 2px solid green;
+    justify-content: space-around;
+}
+
+.card-header {
+    box-sizing: border-box;
+    border: 2px solid magenta
+}
+
+.card-header > h3 {
+    border: 2px solid yellow;
+    margin: auto;
+}
+.description {
+    box-sizing: border-box;
+}
+
+.card-footer {
+    box-sizing: border-box;
+}

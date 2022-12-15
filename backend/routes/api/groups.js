@@ -637,7 +637,7 @@ router.get(
             if (group.GroupImages.length) {
                 group.previewImage = group.GroupImages[0].url
             } else {
-                group.previewImage = "No preview image provided"
+                group.previewImage = false;
             }
             delete group.GroupImages
             

@@ -6,6 +6,8 @@ import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import './Navigation.css';
+import logo from '../../assets/logo.jpeg'
+
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
@@ -13,13 +15,13 @@ function Navigation({ isLoaded }) {
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
-            <li>
+            <span>
                 <ProfileButton user={sessionUser} />
-            </li>
+            </span>
         );
     } else {
         sessionLinks = (
-            <li>
+            <span>
                 <OpenModalButton
                     buttonText="Log In"
                     modalComponent={<LoginFormModal />}
@@ -28,17 +30,17 @@ function Navigation({ isLoaded }) {
                     buttonText="Sign Up"
                     modalComponent={<SignupFormModal />}
                 />
-            </li>
+            </span>
         );
     }
 
     return (
-        <ul>
-            <li>
-                <NavLink exact to="/">Home</NavLink>
-            </li>
+        <div className='nav'>
+            <span>
+                <NavLink exact to="/home"><img className="logo" src={logo} alt="HangOut logo" /></NavLink>
+            </span>
             {isLoaded && sessionLinks}
-        </ul>
+        </div>
     );
 }
 

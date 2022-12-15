@@ -1,3 +1,32 @@
 .hidden {
     display: none
 }
+
+.nav {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    margin-bottom: 40px;
+    background-color: white;
+    border-bottom: solid 1px rgb(218, 213, 213);
+}
+
+.logo {
+    box-sizing: border-box;
+    height: 34px;
+    width: 94.34px;
+    margin: 10px
+}
+
+.drop-container {
+    position: relative;
+}
+
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+
+}
