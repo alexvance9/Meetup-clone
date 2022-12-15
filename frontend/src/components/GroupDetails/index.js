@@ -5,6 +5,7 @@ import { thunkGetGroupDetails } from "../../store/groups";
 import  OpenModalButton  from '../OpenModalButton';
 import  EditGroupModal  from '../EditGroupModal';
 import DeleteGroupModal from "../DeleteGroupModal";
+import './GroupDetails.css'
 
 const GroupDetails = () => {
     let { groupId } = useParams();
@@ -55,21 +56,24 @@ const GroupDetails = () => {
         <>
         <div className='group-details'>
             <div className="details-header">
-                <span id='preview-image'>
+                <div className='detail-preview-image'>
                         <img src={previewImage ? previewImage.url : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"}alt={groupDetails.name} />
-                </span>
+                </div>
                 <div className="header-info">
                     <h2>{groupDetails.name}</h2>
-                    <h3>{groupDetails.city}, {groupDetails.state}</h3>
-                    <h3>{groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</h3>
-                    <h3>Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</h3>
+                    <span>{groupDetails.city}, {groupDetails.state}</span>
+                    <span>{groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</span>
+                    <span>Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</span>
                 </div>
             </div>
                 {sessionLinks}
-                <div className='group-about'>
-                    <h2>What we're about</h2>
-                    <p>{groupDetails.about}</p>
+                <div className="details-body">
+                    <div className='group-about'>
+                        <h2>What we're about</h2>
+                        <p>{groupDetails.about}</p>
+                    </div>
                 </div>
+
         </div>
         </>
     )

@@ -15,7 +15,7 @@ const ShowGroups = () => {
     }, [dispatch])
     
 
-    if (!groups) {
+    if (Object.keys(groups).length === 0) {
         return null;
     }
     
