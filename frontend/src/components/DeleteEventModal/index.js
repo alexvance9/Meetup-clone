@@ -1,32 +1,31 @@
-// import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { thunkDeleteGroup } from '../../store/groups';
+import { thunkDeleteEvent } from '../../store/events';
 
-function DeleteGroupModal({currentGroupId}) {
+function DeleteEventModal({ currentEventId }) {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { closeModal } = useModal();
-
     // add error handling here
+
+    const { closeModal } = useModal();
 
     const handleDelete = async (e) => {
         e.preventDefault();
 
-        const deleteGroup = await dispatch(thunkDeleteGroup(currentGroupId))
+        const deleteEvent = await dispatch(thunkDeleteEvent(currentEventId))
 
-        if(deleteGroup.ok) {
+        if (deleteEvent.ok) {
             closeModal()
             history.push('/home')
-        }
+        } 
     }
 
     return (
         <div className="delete-modal">
-            <h2>Are you sure you want to delete this group?</h2>
-            <h3>This will also delete all associated Events and Photos.</h3>
+            <h2>Are you sure you want to delete this Event?</h2>
+            <h3>This will also delete all associated Photos.</h3>
             <button onClick={handleDelete}>Yes, Delete it.</button>
             <button onClick={closeModal}>No, Dont!</button>
         </div>
@@ -34,4 +33,4 @@ function DeleteGroupModal({currentGroupId}) {
 
 }
 
-export default DeleteGroupModal;
+export default DeleteEventModal;

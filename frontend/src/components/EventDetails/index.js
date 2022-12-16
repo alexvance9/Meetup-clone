@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { thunkGetEventDetails } from "../../store/events";
 import OpenModalButton from "../OpenModalButton";
 import EditEventModal from "../EditEventModal";
-// import OpenModalButton from '../OpenModalButton';
+import DeleteEventModal from "../DeleteEventModal";
 
 const EventDetails = () => {
     let { eventId } = useParams();
@@ -34,6 +34,10 @@ const EventDetails = () => {
                 <OpenModalButton
                     buttonText="Edit this Event"
                     modalComponent={<EditEventModal currentEvent={eventDetails} />}
+                    />
+                <OpenModalButton
+                    buttonText="Delete this Event"
+                    modalComponent={<DeleteEventModal currentEventId={eventDetails.id} />} 
                     />
             </div>
         )

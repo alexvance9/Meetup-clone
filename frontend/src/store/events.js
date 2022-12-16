@@ -5,6 +5,7 @@ const GET_EVENTS = 'events/getAllEvents';
 const GET_EVENT_DETAILS = 'events/getEventDetails';
 const CREATE_EVENT = 'events/createEvent';
 const EDIT_EVENT = 'events/editEvent';
+const DELETE_EVENT = 'events/deleteEvent';
 
 
 /////////// action creators ////////////////
@@ -34,6 +35,12 @@ const editEvent = (event) => {
     return {
         type: EDIT_EVENT,
         event
+    }
+}
+
+const deleteEvent = () => {
+    return {
+        type: DELETE_EVENT
     }
 }
 
@@ -131,6 +138,20 @@ export const thunkEditEvent = (event) => async (dispatch) => {
     } else return response.json()
 }
 
+export const thunkDeleteEvent = (currentEventId) => async (dispatch) => {
+    const response = csrfFetch(`/api/events/${currentEventId}`, {
+        method: 'DELETE'
+    })
+    if (response.ok){
+        const message = await response.json()
+        dispatch(deleteEvent())
+        message.ok = true;
+        return message;
+    } else {
+        return response;
+    }
+}
+
 /////////// REDUCER /////////////////
 
 const initialState = {allEvents: {}, singleEvent: {Group: {}, Venue: {}, EventImages: []}}
@@ -155,6 +176,10 @@ const eventsReducer = (state = initialState, action) => {
         case EDIT_EVENT: {
             const newState = { ...state, allEvents: { ...state.allEvents }, singleEvent: { Group: {}, Venue: {}, EventImages: []}}
             newState.singleEvent = {...action.event, Group: {...action.event.Group}, Venue: {...action.event.Venue}, EventImages: [...action.event.EventImages]}
+            return newState;
+        }
+        case DELETE_EVENT: {
+            const newState = { allEvents: {}, singleEvent: { Group: {}, Venue: {}, EventImages: [] } }
             return newState;
         }
         default: 
