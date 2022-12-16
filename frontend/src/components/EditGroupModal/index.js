@@ -36,9 +36,12 @@ function EditGroupModal({ currentGroup }) {
                 // console.log('new group: ', updatedGroup)
                 closeModal()
                 return history.push(`/groups/${updatedGroup.id}`)
+            } else {
+                console.log(updatedGroup)
             }
         } else {
             return setErrors(errors);
+            
         }
 
             

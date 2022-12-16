@@ -20,6 +20,9 @@ function DeleteGroupModal({currentGroupId}) {
         if(deleteGroup.ok) {
             closeModal()
             history.push('/home')
+        } else {
+            console.log(deleteGroup)
+            return
         }
     }
 

@@ -45,25 +45,32 @@ const deleteGroup = () => {
 
 //////////// THUNK action creators ////////////////
 export const thunkGetAllGroups = () => async (dispatch) => {
+    try {
     const response = await csrfFetch('/api/groups');
-    if (response.ok){
+    // if (response.ok){
         const groups = await response.json();
         dispatch(getAllGroups(groups))
         return groups;
+    } catch (e) {
+        return e.json()
     }
 }
 
 export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/groups/${groupId}`);
-    if (response.ok) {
+    
+    // if (response.ok) {
+        try{
+        const response = await csrfFetch(`/api/groups/${groupId}`);
+        // console.log("it's okay!")
         const group = await response.json();
         dispatch(getGroupDetails(group));
         group.ok = true;
         return group;
-    } else {
+    } catch (e) {
         // const errors = await response.json();
         // return errors;
-        return response;
+        // console.log("it's not okay!")
+        return e.json();
     }
 }
 
@@ -81,7 +88,7 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
         url: previewImageURL,
         preview: true
     }
-
+    try {
     const response = await csrfFetch('/api/groups', {
         method: 'POST',
         headers: {
@@ -103,10 +110,10 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
             newGroup.ok = true;
             return newGroup;
         }
-    } else {
-        return response;
     }
-}
+    } catch (e) {
+        return e.json();
+} }
 
 
 export const thunkEditGroup = (group, groupId) => async (dispatch) => {
@@ -119,7 +126,8 @@ export const thunkEditGroup = (group, groupId) => async (dispatch) => {
         city,
         state
     }
-    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        try {
+        const response = await csrfFetch(`/api/groups/${groupId}`, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json"
@@ -130,14 +138,16 @@ export const thunkEditGroup = (group, groupId) => async (dispatch) => {
         const updatedGroup = await response.json()
         dispatch(editGroup(updatedGroup))
         updatedGroup.ok = true;
-        return updatedGroup;
-    } else {
-        return response;
+        return updatedGroup;}
+    } catch (e) {
+        return e.json();
     }
 }
 
 export const thunkDeleteGroup = (groupId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/groups/${groupId}`, {
+    
+    try {
+        const response = await csrfFetch(`/api/groups/${groupId}`, {
         method: 'DELETE'
     })
     if (response.ok) {
@@ -145,8 +155,8 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
         const message = await response.json()
         message.ok = true;
         return message;
-    } else {
-        return response;
+    } } catch (e) {
+        return e.json();
     }
 }
 

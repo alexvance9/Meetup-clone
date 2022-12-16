@@ -35,6 +35,9 @@ function App() {
           <Route exact path='/'>
             <SplashPage />
           </Route>
+          <Route >
+            <div>We couldn't find the page you were looking for!</div>
+          </Route>
         </Switch>
       )}
     </>

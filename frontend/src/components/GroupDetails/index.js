@@ -19,12 +19,13 @@ const GroupDetails = () => {
         const response = await dispatch(thunkGetGroupDetails(groupId))
         if (!response.ok){ 
             setIsLoaded(false)
+            // console.log(response)
         } else {
             setIsLoaded(true)
         }
        })()
     }, [dispatch, groupId])
-
+    
     //    session edit and delete group buttons if current user is organizer
     const sessionUser = useSelector(state => state.session.user);
     let sessionLinks;
@@ -35,13 +36,13 @@ const GroupDetails = () => {
                     <OpenModalButton
                         buttonText="Edit Group"
                         modalComponent={<EditGroupModal currentGroup={groupDetails} />}
-                    />
+                        />
                 </div>
                 <div className="delete-group-button">
                     <OpenModalButton
                         buttonText="Delete Group"
                         modalComponent={ <DeleteGroupModal currentGroupId={groupId}/>}
-                    />
+                        />
                 </div>
                 <div className="create-event-button">
                     <OpenModalButton
@@ -52,8 +53,8 @@ const GroupDetails = () => {
             </div>
         )
     }
-
-   if (!isLoaded) return (<span>That Group doesn't exist yet!</span>);
+    
+    if (!isLoaded) return (<span>That Group doesn't exist yet!</span>);
 //    find the preview image in the groupimages array since previewimage doesn't come back with group details
 
    const previewImage = groupDetails.GroupImages.find(image => image.preview === true)
