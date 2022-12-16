@@ -261,15 +261,15 @@ router.delete('/:eventId', requireAuth, isOrganizerOrCoHost, async (req, res, ne
 
 // edit event by id
 // require organizer or cohost
-router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
-    const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+router.put('/:eventId', requireAuth, async(req, res, next) => {
+    const {name, type, capacity, price, description, startDate, endDate} = req.body;
     const event = await Event.findByPk(req.params.eventId);
-    const venue = await Venue.findByPk(venueId);
-    if(!venue){
-        const err = new Error('Venue could not be found');
-        err.status = 404;
-        return next(err)
-    }
+    // const venue = await Venue.findByPk(venueId);
+    // if(!venue){
+    //     const err = new Error('Venue could not be found');
+    //     err.status = 404;
+    //     return next(err)
+    // }
 //    console.log(startDate)
 //    const sDateOnly = startDate.split(' ')[0]
 //    console.log(sDateOnly)
@@ -277,7 +277,7 @@ router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) 
 //    console.log(sTime);
    
     await event.update({
-            venueId,
+            
             name,
             type,
             capacity,

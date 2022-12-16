@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const GET_EVENTS = 'events/getAllEvents';
 const GET_EVENT_DETAILS = 'events/getEventDetails';
 const CREATE_EVENT = 'events/createEvent';
+const EDIT_EVENT = 'events/editEvent';
 
 
 /////////// action creators ////////////////
@@ -25,6 +26,13 @@ const getEventDetails = (event) => {
 const createEvent = (event) => {
     return {
         type: CREATE_EVENT,
+        event
+    }
+}
+
+const editEvent = (event) => {
+    return {
+        type: EDIT_EVENT,
         event
     }
 }
@@ -92,6 +100,37 @@ export const thunkCreateEvent = (event) => async (dispatch) => {
 
 }
 
+
+export const thunkEditEvent = (event) => async (dispatch) => {
+    const { eventId, name, type, capacity, price, description, start, end } = event;
+
+    const editEventReq = {
+        name,
+        type,
+        capacity,
+        price,
+        description,
+        startDate: start,
+        endDate: end
+    }
+
+    const response = await csrfFetch(`/api/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(editEventReq)
+    })
+
+    if (response.ok) {
+        const updatedEventDetails = await csrfFetch(`/api/events/${eventId}`);
+        const updatedEvent = await updatedEventDetails.json()
+        dispatch(editEvent(updatedEvent));
+        updatedEvent.ok = true;
+        return updatedEvent;
+    } else return response.json()
+}
+
 /////////// REDUCER /////////////////
 
 const initialState = {allEvents: {}, singleEvent: {Group: {}, Venue: {}, EventImages: []}}
@@ -111,6 +150,11 @@ const eventsReducer = (state = initialState, action) => {
         case CREATE_EVENT: {
             const newState = {...state, allEvents: {...state.allEvents}}
             newState.allEvents[action.event.id] = {...action.event, Group: {...action.event.Group}, Venue: {}};
+            return newState;
+        }
+        case EDIT_EVENT: {
+            const newState = { ...state, allEvents: { ...state.allEvents }, singleEvent: { Group: {}, Venue: {}, EventImages: []}}
+            newState.singleEvent = {...action.event, Group: {...action.event.Group}, Venue: {...action.event.Venue}, EventImages: [...action.event.EventImages]}
             return newState;
         }
         default: 

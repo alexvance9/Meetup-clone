@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetEventDetails } from "../../store/events";
+import OpenModalButton from "../OpenModalButton";
+import EditEventModal from "../EditEventModal";
 // import OpenModalButton from '../OpenModalButton';
 
 const EventDetails = () => {
@@ -9,6 +11,9 @@ const EventDetails = () => {
     const dispatch = useDispatch();
     const [isLoaded, setIsLoaded] = useState(true);
     const eventDetails = useSelector(state => state.events.singleEvent);
+
+    // console.log(eventDetails.Group.organizerId)
+    const organizer = eventDetails.Group.organizerId;
 
     useEffect(() => {
         (async () => {
@@ -20,6 +25,19 @@ const EventDetails = () => {
             }
         })()
     }, [dispatch, eventId])
+
+    const sessionUser = useSelector(state => state.session.user);
+    let sessionLinks;
+    if(sessionUser && sessionUser.id === organizer){
+        sessionLinks = (
+            <div className="session-event-buttons">
+                <OpenModalButton
+                    buttonText="Edit this Event"
+                    modalComponent={<EditEventModal currentEvent={eventDetails} />}
+                    />
+            </div>
+        )
+    }
 
     if (!isLoaded) return (<span>That Event doesn't exist yet!</span>);
     //    find the preview image in the groupimages array since previewimage doesn't come back with group details
@@ -36,6 +54,7 @@ const EventDetails = () => {
                     <div className="event-detail-preview-image">
                         <img src={previewImage ? previewImage.url : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"} alt={eventDetails.name} />
                     </div>
+                {sessionLinks}
                     <div className="event-details-description">
                         <h3>Details</h3>
                         <span>{eventDetails.description}</span>
