@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { thunkEditEvent } from '../../store/events';
+import './EditEventModal.css'
 
 
 const EditEventModal = ({ currentEvent }) => {
@@ -70,7 +71,7 @@ const EditEventModal = ({ currentEvent }) => {
 
 
     return (
-        <div className="modal">
+        <div className="edit-event-modal">
             <h1>Edit Event</h1>
             <form onSubmit={handleSubmit}>
                 <ul>

@@ -7,6 +7,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* overflow-y: scroll; */
+    /* height: 80%; */
 }
 
 #modal-background {
@@ -21,4 +23,10 @@
 #modal-content {
     position: absolute;
     background-color: white;
+    /* border: red 2px solid; */
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    max-height: 90vh;
+    overflow-y: auto;
 }

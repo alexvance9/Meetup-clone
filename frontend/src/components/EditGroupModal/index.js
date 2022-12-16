@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { thunkEditGroup } from '../../store/groups';
+import './EditGroupModal.css'
 
 
 function EditGroupModal({ currentGroup }) {
@@ -48,7 +49,7 @@ function EditGroupModal({ currentGroup }) {
     };
 
     return (
-        <>
+        <div className="edit-group-modal">
             <h1>Edit Group</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
@@ -80,6 +81,8 @@ function EditGroupModal({ currentGroup }) {
                         <option value="Online">Online</option>
                     </select>
                 </label>
+                <div className="radio-buttons">
+
                 <label>
                     Public
                     <input
@@ -87,7 +90,7 @@ function EditGroupModal({ currentGroup }) {
                         value={false}
                         onChange={(e) => setIsPrivate(false)}
                         checked={!isPrivate}
-                    />
+                        />
                 </label>
                 <label>
                     Private
@@ -96,8 +99,9 @@ function EditGroupModal({ currentGroup }) {
                         value={true}
                         onChange={(e) => setIsPrivate(true)}
                         checked={isPrivate}
-                    />
+                        />
                 </label>
+                        </div>
                 <label>
                     City
                     <input
@@ -118,7 +122,7 @@ function EditGroupModal({ currentGroup }) {
                 </label>
                 <button type="submit">Submit Changes</button>
             </form>
-        </>
+        </div>
     );
 }
 

@@ -1,0 +1,24 @@
+.edit-group-modal {
+    /* border: red 2px solid; */
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    width: 30vw;
+
+}
+
+.edit-group-modal>h1 {
+    margin: 0 auto;
+}
+
+.edit-group-modal>form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-group-modal>form>* {
+    margin: 10px;
+    /* height: 3vh; */
+    box-sizing: border-box;
+}

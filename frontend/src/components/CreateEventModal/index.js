@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { thunkCreateEvent } from '../../store/events';
+import './CreateEventModal.css'
 
 
 const CreateEventModal = ({currentGroupId}) => {
@@ -69,7 +70,7 @@ const CreateEventModal = ({currentGroupId}) => {
 
 
     return (
-        <div className="modal">
+        <div className="create-event-modal">
             <h1>Create New Event</h1>
             <form onSubmit={handleSubmit}>
                 <ul>

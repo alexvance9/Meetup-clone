@@ -3,3 +3,22 @@
  body {
     font-family: 'Rubik', sans-serif;
 }
+
+button {
+    border: none;
+    border-radius: 5px;
+    margin: 2px;
+    background-color: #f65858;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+input {
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+* {
+    box-sizing: border-box;
+}

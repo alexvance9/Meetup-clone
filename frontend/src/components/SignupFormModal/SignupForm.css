@@ -1,0 +1,22 @@
+.signup-modal {
+    border-radius: inherit;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 40px;
+        width: 30vw;
+}
+
+.signup-modal > h1 {
+    margin: 0 auto;
+}
+
+.signup-modal > form {
+    display: flex;
+    flex-direction: column;
+}
+
+.signup-modal>form>* {
+    margin: 10px;
+    /* height: 3vh; */
+    box-sizing: border-box;
+}

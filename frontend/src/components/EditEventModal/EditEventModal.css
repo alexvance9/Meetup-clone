@@ -1,0 +1,26 @@
+.edit-event-modal {
+    /* border: red 2px solid; */
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    width: 30vw;
+    /* overflow-y: scroll; */
+
+}
+
+.edit-event-modal>h1 {
+    margin: 0 auto;
+}
+
+.edit-event-modal>form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-event-modal>form>* {
+    /* margin: 10px; */
+    /* height: 3vh; */
+    box-sizing: border-box;
+}
+

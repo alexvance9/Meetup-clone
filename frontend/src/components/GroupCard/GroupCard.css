@@ -12,12 +12,12 @@ a {
 
 .preview-image {
     box-sizing: border-box;
-    border: 2px solid rgb(18, 233, 240);
+    /* border: 2px solid rgb(18, 233, 240); */
     height: 80%;
 }
 
 .preview-image > img {
-    border: 3px pink solid;
+    /* border: 3px pink solid; */
     box-sizing: border-box;
     object-fit: contain;
     height: 100%;
@@ -27,21 +27,30 @@ a {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    border: 2px solid green;
+    /* border: 2px solid green; */
     justify-content: space-around;
+    padding-left: 10px;
 }
 
 .group-card-header {
     box-sizing: border-box;
-    border: 2px solid magenta
+    /* border: 2px solid magenta */
 }
 
 .group-card-header > h3 {
-    border: 2px solid yellow;
-    margin: auto;
+    /* border: 2px solid yellow; */
+    margin: 5px auto;
 }
 .description {
+    border: solid 2px green;
     box-sizing: border-box;
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
+    height: 30%;
+    
+}
+.description > p {
+    text-overflow: ellipsis;
 }
 
 .group-card-footer {

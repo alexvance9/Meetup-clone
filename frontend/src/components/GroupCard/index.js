@@ -14,10 +14,10 @@ const GroupCard = ({ group }) => {
             <div className="group-card-flex-container">  
                 <div className="group-card-header">
                     <h3>{group.name}</h3>
-                    <h3>{group.city}, {group.state}</h3>
+                    <span>{group.city}, {group.state}</span>
                 </div>
                 <div className="description">
-                    {group.about}
+                        <p>{group.about}</p>
                 </div>
                 <div className="group-card-footer">
                     {group.numMembers} &#x2022; {group.private === true ? "Private" : "Public"}
