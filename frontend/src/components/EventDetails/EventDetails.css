@@ -1,0 +1,15 @@
+.event-details-header {
+    border-bottom: 2px solid rgb(232, 226, 226);
+}
+
+.event-details-body {
+    display: flex;
+}
+
+.event-details-body-left {
+    border: aqua solid 2px
+}
+
+.event-details-body-right {
+    border: 2px solid magenta;
+}

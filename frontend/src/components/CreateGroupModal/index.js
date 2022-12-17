@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { thunkCreateGroup } from '../../store/groups';
+import "./CreateGroupModal.css"
 
 
 function CreateGroupModal() {
@@ -32,17 +33,17 @@ function CreateGroupModal() {
             const newGroup = await dispatch(thunkCreateGroup({ name, about, type, isPrivate, city, state, previewImageURL }))
 
             if(newGroup.ok){
-                console.log('new group: ', newGroup)
+                // console.log('new group: ', newGroup)
                 closeModal()
                 return history.push(`/groups/${newGroup.id}`)
-            } else {
-                return setErrors(errors);
-            }
+            } 
         }
+        return setErrors(errors);
     };
+            
 
     return (
-        <>
+        <div className="create-group-modal">
             <h1>Create New Group</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
@@ -74,6 +75,7 @@ function CreateGroupModal() {
                         <option value="Online">Online</option>
                     </select>
                 </label>
+               <div className="radio-buttons"> 
                 <label>
                     Public
                     <input
@@ -81,7 +83,7 @@ function CreateGroupModal() {
                         value={false}
                         onChange={(e) => setIsPrivate(false)}
                         checked={!isPrivate}
-                    />
+                        />
                 </label>
                 <label>
                     Private
@@ -90,8 +92,9 @@ function CreateGroupModal() {
                         value={true}
                         onChange={(e) => setIsPrivate(true)}
                         checked={isPrivate}
-                    />
+                        />
                 </label>
+                </div>
                 <label>
                     City
                     <input
@@ -121,7 +124,7 @@ function CreateGroupModal() {
                 </label>
                 <button type="submit">Create Group</button>
             </form>
-        </>
+        </div>
     );
 }
 

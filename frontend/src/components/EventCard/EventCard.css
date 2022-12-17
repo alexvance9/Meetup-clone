@@ -1,0 +1,15 @@
+.event-card {
+    display: flex;
+    border-top: solid rgb(216, 212, 212) 2px;
+    height: 25vh;
+    overflow: hidden;
+}
+
+.event-card-flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+        padding-left: 10px;
+        overflow: hidden;
+        width: 60%
+}

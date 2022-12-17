@@ -1,0 +1,25 @@
+.home-page {
+    margin: 0 auto;
+    width: 100vw;
+}
+
+.page-tabs {
+    width: 55vw;
+    margin: 1% auto;
+}
+
+.page-tabs > button {
+    background-color: transparent;
+    color: #008294;
+    font-size: 20px;
+}
+
+/* .page-tabs > button:focus {
+    text-decoration: underline;
+    outline-width: 0px;
+    outline-color: #008294;
+} */
+
+.selected {
+    text-decoration: underline;
+}

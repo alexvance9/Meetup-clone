@@ -27,8 +27,25 @@ function LoginFormModal() {
             );
     };
 
+    const handleDemo = (e) => {
+        e.preventDefault()
+        setErrors([]);
+        const credential = "DemoUser";
+        const password = "password"
+        
+        return dispatch(sessionActions.login({ credential, password }))
+            .then(closeModal)
+            .then(history.push('/home'))
+            .catch(
+                async (res) => {
+                    const data = await res.json();
+                    if (data && data.errors) setErrors(data.errors);
+                }
+            );
+    }
+
     return (
-        <>
+        <div className="login-modal">
             <h1>Log In</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
@@ -36,27 +53,32 @@ function LoginFormModal() {
                         <li key={idx}>{error}</li>
                     ))}
                 </ul>
-                <label>
+                <label for="credential">
                     Username or Email
                     <input
                         type="text"
+                        name="credential"
                         value={credential}
                         onChange={(e) => setCredential(e.target.value)}
                         required
-                    />
-                </label>
-                <label>
+                        />
+                        </label>
+                <label for="password">
                     Password
                     <input
                         type="password"
+                        name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                    />
-                </label>
+                        />
+                        </label>
+                        
                 <button type="submit">Log In</button>
+                <button onClick={handleDemo}>Demo User</button>
             </form>
-        </>
+            
+        </div>
     );
 }
 

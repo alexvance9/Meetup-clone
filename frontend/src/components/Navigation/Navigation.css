@@ -21,6 +21,10 @@
     margin: 10px
 }
 
+.logged-in-nav {
+    display: flex;
+}
+
 .drop-container {
     position: relative;
 }

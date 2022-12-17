@@ -261,15 +261,15 @@ router.delete('/:eventId', requireAuth, isOrganizerOrCoHost, async (req, res, ne
 
 // edit event by id
 // require organizer or cohost
-router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) => {
-    const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+router.put('/:eventId', requireAuth, async(req, res, next) => {
+    const {name, type, capacity, price, description, startDate, endDate} = req.body;
     const event = await Event.findByPk(req.params.eventId);
-    const venue = await Venue.findByPk(venueId);
-    if(!venue){
-        const err = new Error('Venue could not be found');
-        err.status = 404;
-        return next(err)
-    }
+    // const venue = await Venue.findByPk(venueId);
+    // if(!venue){
+    //     const err = new Error('Venue could not be found');
+    //     err.status = 404;
+    //     return next(err)
+    // }
 //    console.log(startDate)
 //    const sDateOnly = startDate.split(' ')[0]
 //    console.log(sDateOnly)
@@ -277,7 +277,7 @@ router.put('/:eventId', requireAuth, isOrganizerOrCoHost, async(req, res, next) 
 //    console.log(sTime);
    
     await event.update({
-            venueId,
+            
             name,
             type,
             capacity,
@@ -301,7 +301,7 @@ router.get('/:eventId', async (req, res, next) => {
         include: [
             {
                 model: Group,
-                attributes: ['id', 'name', 'private', 'city', 'state']
+                attributes: ['id', 'organizerId', 'name', 'private', 'city', 'state']
             },
             {
                 model: Venue,
@@ -460,7 +460,7 @@ router.get('/', async (req, res, next) => {
         if (event.EventImages.length) {
             jsonEvent.previewImage = event.EventImages[0].url
         } else {
-            jsonEvent.previewImage = "No preview image provided"
+            jsonEvent.previewImage = false;
         }
         delete jsonEvent.EventImages;
         delete jsonEvent.createdAt;
