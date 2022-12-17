@@ -3,6 +3,13 @@
 }
 
 .event-details-body {
-    border: 2px solid magenta;
     display: flex;
+}
+
+.event-details-body-left {
+    border: aqua solid 2px
+}
+
+.event-details-body-right {
+    border: 2px solid magenta;
 }

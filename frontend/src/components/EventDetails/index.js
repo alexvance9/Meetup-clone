@@ -59,7 +59,7 @@ const EventDetails = () => {
                     <div className="event-detail-preview-image">
                         <img src={previewImage ? previewImage.url : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"} alt={eventDetails.name} />
                     </div>
-                {sessionLinks}
+                
                     <div className="event-details-description">
                         <h3>Details</h3>
                         <span>{eventDetails.description}</span>
@@ -80,11 +80,8 @@ const EventDetails = () => {
                                End Date: {eventDetails.endDate}
                             </span>
                         </div>
-                        {/* <div className="event-venue">
-                            <span>{eventDetails.Venue.address}</span>
-                            <span>{eventDetails.Venue.city}, {eventDetails.Venue.state}</span>
-                        </div> */}
                     </div>
+                    {sessionLinks}
                 </div>
             </div>
         </div>
