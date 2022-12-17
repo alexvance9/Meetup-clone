@@ -52,7 +52,7 @@ export const thunkGetAllGroups = () => async (dispatch) => {
         dispatch(getAllGroups(groups))
         return groups;
     } catch (e) {
-        return e.json()
+        return await e.json()
     }
 }
 
@@ -70,7 +70,7 @@ export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
         // const errors = await response.json();
         // return errors;
         // console.log("it's not okay!")
-        return e.json();
+        return await e.json();
     }
 }
 
@@ -112,7 +112,7 @@ export const thunkCreateGroup = (group) => async (dispatch) => {
         }
     }
     } catch (e) {
-        return e.json();
+        return await e.json();
 } }
 
 
@@ -140,7 +140,7 @@ export const thunkEditGroup = (group, groupId) => async (dispatch) => {
         updatedGroup.ok = true;
         return updatedGroup;}
     } catch (e) {
-        return e.json();
+        return await e.json();
     }
 }
 
@@ -156,7 +156,7 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
         message.ok = true;
         return message;
     } } catch (e) {
-        return e.json();
+        return await e.json();
     }
 }
 

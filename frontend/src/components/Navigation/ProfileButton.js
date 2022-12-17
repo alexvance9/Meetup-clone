@@ -41,14 +41,14 @@ function ProfileButton({ user }) {
             <button className="dropbtn" onClick={openMenu}>
                 <i className="fa-solid fa-chevron-down"></i>
             </button>
-            <ul className={ulClassName} ref={ulRef}>
-                <li>{user.username}</li>
-                <li>{user.firstName} {user.lastName}</li>
-                <li>{user.email}</li>
-                <li>
+            <div className={ulClassName} ref={ulRef}>
+                <div>{user.username}</div>
+                <div>{user.firstName} {user.lastName}</div>
+                <div>{user.email}</div>
+                
                     <button onClick={logout}>Log Out</button>
-                </li>
-            </ul>
+                
+            </div>
         </div>
     );
 }

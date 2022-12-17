@@ -28,7 +28,7 @@ const EventDetails = () => {
     }, [dispatch, eventId])
 
     const sessionUser = useSelector(state => state.session.user);
-    let sessionLinks;
+    let sessionLinks = (<div className="session-button-placeholder"></div>);
     if(sessionUser && sessionUser.id === organizer){
         sessionLinks = (
             <div className="session-event-buttons">
@@ -49,6 +49,9 @@ const EventDetails = () => {
 
     const previewImage = eventDetails.EventImages.find(image => image.preview === true)
 
+    const eventSDate = new Date(eventDetails.startDate).toUTCString();
+    const eventEDate = new Date(eventDetails.endDate).toUTCString();
+
     return (
         <div className='event-details'>
         <div className='event-details-header'>
@@ -67,20 +70,31 @@ const EventDetails = () => {
                 </div>
                 <div className="event-details-body-right">
                     <div className="event-group-details">
-                        <span>{eventDetails.Group.name}</span>
-                        <span>{eventDetails.Group.private ? "Private Group" : "Public Group"}</span>
-                        <span>{eventDetails.Group.city}, {eventDetails.Group.state}</span>
+                        <div className="event-details-groupname">{eventDetails.Group.name}</div>
+                        <div>{eventDetails.Group.city}, {eventDetails.Group.state}</div>
+                        <div>{eventDetails.Group.private ? "Private Group" : "Public Group"}</div>
                     </div>
                     <div className="event-time-place-box">
+                        <div className="time-place-icons">
+                            <i class="fa-regular fa-clock"></i>
+                            <div>
+                                {eventDetails.type === "In Person" ? <i class="fa-solid fa-location-dot"></i> : <i class="fa-solid fa-video"></i>}
+                            </div>
+                        </div>
                         <div className="event-date">
-                            <span>
-                                Start Date: {eventDetails.startDate}
-                            </span>
-                            <span>
-                               End Date: {eventDetails.endDate}
-                            </span>
+                            <div>
+                                Start Date: {eventSDate}
+                            </div>
+                            <div>
+                               End Date: {eventEDate}
+                            </div>
+                            <div className="event-type">
+                                {eventDetails.type} <br />
+                                {eventDetails.type === "In Person" ? "Venue Coming Soon" : "Video Link Coming Soon"}
+                            </div>
                         </div>
                     </div>
+
                     {sessionLinks}
                 </div>
             </div>
