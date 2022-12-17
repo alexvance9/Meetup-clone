@@ -1,3 +1,4 @@
+import './EventCard.css'
 import { NavLink } from 'react-router-dom';
 
 const EventCard = ({ event }) => {
@@ -17,7 +18,7 @@ const EventCard = ({ event }) => {
                 <div className="event-card-header">
                     <span>{eventDate}</span>
                     <h3>{event.name}</h3>
-                    <h3>{event.Group.name} &#x2022; {event.Group.city}, {event.Group.state}</h3>
+                    <span>{event.Group.name} &#x2022; {event.Group.city}, {event.Group.state}</span>
                 </div>
             
                 <div className="event-card-footer">

@@ -1,8 +1,10 @@
 .group-card {
     display: flex;
     box-sizing: border-box;
-    border: solid red 2px;
-    height: 25vh
+    /* border-bottom: solid rgb(216, 212, 212) 2px; */
+    border-top: solid rgb(216, 212, 212) 2px;
+    height: 25vh;
+    overflow: hidden;
 }
 
 a {
@@ -13,14 +15,18 @@ a {
 .preview-image {
     box-sizing: border-box;
     /* border: 2px solid rgb(18, 233, 240); */
-    height: 80%;
+    border-radius: 5px;
+    height: 50%;
+    width: 30%;
+    margin: 10px 10px auto 10px;
 }
 
 .preview-image > img {
-    /* border: 3px pink solid; */
+    border-radius: inherit;
     box-sizing: border-box;
-    object-fit: contain;
+    object-fit: cover;
     height: 100%;
+    width: 100%;
 }
 
 .group-card-flex-container {
@@ -30,6 +36,8 @@ a {
     /* border: 2px solid green; */
     justify-content: space-around;
     padding-left: 10px;
+    overflow: hidden;
+    width: 60%
 }
 
 .group-card-header {
@@ -42,16 +50,16 @@ a {
     margin: 5px auto;
 }
 .description {
-    border: solid 2px green;
-    box-sizing: border-box;
-    overflow: hidden;
-    /* text-overflow: ellipsis; */
-    height: 30%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    /* border: solid 2px green; */
     
+    overflow: hidden;
+    
+    /* height: 20%; */
 }
-.description > p {
-    text-overflow: ellipsis;
-}
+
 
 .group-card-footer {
     box-sizing: border-box;

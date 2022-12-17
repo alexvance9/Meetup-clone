@@ -17,7 +17,9 @@ const GroupCard = ({ group }) => {
                     <span>{group.city}, {group.state}</span>
                 </div>
                 <div className="description">
-                        <p>{group.about}</p>
+                        
+                            {group.about}
+                        
                 </div>
                 <div className="group-card-footer">
                     {group.numMembers} &#x2022; {group.private === true ? "Private" : "Public"}

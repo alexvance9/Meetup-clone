@@ -5,6 +5,7 @@ import { thunkGetEventDetails } from "../../store/events";
 import OpenModalButton from "../OpenModalButton";
 import EditEventModal from "../EditEventModal";
 import DeleteEventModal from "../DeleteEventModal";
+import './EventDetails.css'
 
 const EventDetails = () => {
     let { eventId } = useParams();
@@ -50,7 +51,7 @@ const EventDetails = () => {
 
     return (
         <div className='event-details'>
-            <div className='event-details-header'>
+        <div className='event-details-header'>
                 <h2>{eventDetails.name}</h2>
             </div>
             <div className="event-details-body">

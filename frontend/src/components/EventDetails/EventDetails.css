@@ -1,0 +1,8 @@
+.event-details-header {
+    border-bottom: 2px solid rgb(232, 226, 226);
+}
+
+.event-details-body {
+    border: 2px solid magenta;
+    display: flex;
+}
