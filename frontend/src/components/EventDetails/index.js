@@ -49,8 +49,8 @@ const EventDetails = () => {
 
     const previewImage = eventDetails.EventImages.find(image => image.preview === true)
 
-    const eventSDate = new Date(eventDetails.startDate).toUTCString();
-    const eventEDate = new Date(eventDetails.endDate).toUTCString();
+    const eventSDate = new Date(eventDetails.startDate).toLocaleString('en-US');
+    const eventEDate = new Date(eventDetails.endDate).toLocaleString('en-US');
 
     return (
         <div className='event-details'>
