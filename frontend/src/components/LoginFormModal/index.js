@@ -53,7 +53,7 @@ function LoginFormModal() {
                         <li key={idx}>{error}</li>
                     ))}
                 </ul>
-                <label for="credential">
+                <label>
                     Username or Email
                     <input
                         type="text"
@@ -63,7 +63,7 @@ function LoginFormModal() {
                         required
                         />
                         </label>
-                <label for="password">
+                <label>
                     Password
                     <input
                         type="password"

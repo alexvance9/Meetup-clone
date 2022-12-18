@@ -54,7 +54,7 @@ export const thunkGetAllEvents = () => async (dispatch) => {
         dispatch(getAllEvents(events))
         return events;
     }} catch (e) {
-        return e.json();
+        return await e.json();
     }
 }
 
@@ -67,7 +67,7 @@ export const thunkGetEventDetails = (eventId) => async (dispatch) => {
         event.ok = true;
         return event;
     }} catch (e) {
-        return e.json()
+        return await e.json()
     }
 }
 
@@ -110,7 +110,7 @@ export const thunkCreateEvent = (event) => async (dispatch) => {
         }
         } 
     } catch (e) {
-        return e.json();
+        return await e.json();
     }
 
 }
@@ -146,7 +146,7 @@ export const thunkEditEvent = (event) => async (dispatch) => {
             return updatedEvent;
         } 
     } catch (e) {
-        return e.json()
+        return await e.json()
     }
 }
 
@@ -161,7 +161,7 @@ export const thunkDeleteEvent = (currentEventId) => async (dispatch) => {
         message.ok = true;
         return message;
     } catch (e) {
-        return e.json()
+        return await e.json()
     }
         
     

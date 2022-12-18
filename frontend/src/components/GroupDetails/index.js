@@ -12,6 +12,7 @@ const GroupDetails = () => {
     let { groupId } = useParams();
     const dispatch = useDispatch();
     const [ isLoaded, setIsLoaded ] = useState(true)
+    const [isAbout, setIsAbout] = useState(true);
     const groupDetails = useSelector(state => state.groups.singleGroup);
 
     useEffect(() => {
@@ -59,6 +60,32 @@ const GroupDetails = () => {
 
    const previewImage = groupDetails.GroupImages.find(image => image.preview === true)
 
+//    onclick for info tabs
+    const aboutClick = (e) => {
+        e.preventDefault();
+        setIsAbout(true);
+    }
+
+    const infoClick = (e) => {
+        e.preventDefault()
+        setIsAbout(false)
+    }
+
+    let infoTab;
+    if(isAbout) {
+        infoTab = (<div className='group-about'>
+            <h2>What we're about</h2>
+            <p>{groupDetails.about}</p>
+        </div>)
+    } else {
+        infoTab = (
+            <div className="group-about">
+                <h2>More Info Coming Soon!</h2>
+                <p>Stay tuned for exciting new features, including venues, memberships, and photos!</p>
+            </div>
+        )
+    }
+
 
     return (
         <>
@@ -69,19 +96,23 @@ const GroupDetails = () => {
                 </div>
                 <div className="header-info">
                     <h2>{groupDetails.name}</h2>
-                    <span>{groupDetails.city}, {groupDetails.state}</span>
-                    <span>{groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</span>
-                    <span>Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</span>
+                        <div> <i className="fa-solid fa-location-dot"></i> {groupDetails.city}, {groupDetails.state}</div>
+                        <div> <i className="fa-solid fa-users"></i> {groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</div>
+                        <div><i className="fa-regular fa-user"></i> Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</div>
                 </div>
             </div>
-                {sessionLinks}
-                <div className="details-body">
-                    <div className='group-about'>
-                        <h2>What we're about</h2>
-                        <p>{groupDetails.about}</p>
-                    </div>
-                </div>
+            <div className="all-details-buttons">
 
+            <div className="group-details-tabs">
+                <button type="button" onClick={aboutClick} className={isAbout ? "selected" : ""}>About </button>
+                <button type="button" onClick={infoClick} className={!isAbout ? "selected" : ""}>More Info</button>
+            </div>
+                {sessionLinks}
+            </div>
+                <div className="details-body">
+                   
+            {infoTab}
+                </div>
         </div>
         </>
     )

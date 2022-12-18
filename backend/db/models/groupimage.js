@@ -15,10 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   GroupImage.init({
     groupId: {
       allowNull: false,
-      type: DataTypes.INTEGER},
+      type: DataTypes.INTEGER
+    },
     url: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     preview: {
       allowNull: false,
