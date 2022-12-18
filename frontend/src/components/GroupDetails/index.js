@@ -96,9 +96,9 @@ const GroupDetails = () => {
                 </div>
                 <div className="header-info">
                     <h2>{groupDetails.name}</h2>
-                        <div> <i class="fa-solid fa-location-dot"></i> {groupDetails.city}, {groupDetails.state}</div>
-                        <div> <i class="fa-solid fa-users"></i> {groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</div>
-                        <div><i class="fa-regular fa-user"></i> Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</div>
+                        <div> <i className="fa-solid fa-location-dot"></i> {groupDetails.city}, {groupDetails.state}</div>
+                        <div> <i className="fa-solid fa-users"></i> {groupDetails.numMembers} members &#x2022; {groupDetails.private === true ? "Private" : "Public"}</div>
+                        <div><i className="fa-regular fa-user"></i> Organized by {groupDetails.Organizer.firstName} {groupDetails.Organizer.lastName}</div>
                 </div>
             </div>
             <div className="all-details-buttons">

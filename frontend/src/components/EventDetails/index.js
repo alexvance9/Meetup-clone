@@ -76,9 +76,9 @@ const EventDetails = () => {
                     </div>
                     <div className="event-time-place-box">
                         <div className="time-place-icons">
-                            <i class="fa-regular fa-clock"></i>
+                            <i className="fa-regular fa-clock"></i>
                             <div>
-                                {eventDetails.type === "In Person" ? <i class="fa-solid fa-location-dot"></i> : <i class="fa-solid fa-video"></i>}
+                                {eventDetails.type === "In Person" ? <i className="fa-solid fa-location-dot"></i> : <i className="fa-solid fa-video"></i>}
                             </div>
                         </div>
                         <div className="event-date">
