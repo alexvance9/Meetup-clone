@@ -6,10 +6,11 @@
 link to live site: https://my-meetup-clone.onrender.com
 
 This is my first fullstack clone project completed at App Academy.
+
 Technologies used:
-    -Javascript and Node.js
-    -React and Redux frontend
-    -Express and Sequelize/PostGreSQL backend
+- Javascript and Node.js
+- React and Redux frontend
+- Express and Sequelize/PostGreSQL backend
 
 ### Features: 
 
