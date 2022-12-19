@@ -8,7 +8,20 @@ import './EditEventModal.css'
 
 const EditEventModal = ({ currentEvent }) => {
 
+
     // console.log(currentEvent)
+    // console.log(new Date(currentEvent.startDate).toLocaleTimeString('en-US'))
+    // const defaultStartTime = new Date(currentEvent.startDate).toLocaleTimeString('en-US');
+    // parse date/times to -prepopulate edit form
+    let startArray = currentEvent.startDate.split('T')
+    // console.log(startArray)
+    // let startTimeArray = startArray[1].split('.')
+    // console.log(startTimeArray[0])
+
+    let endArray = currentEvent.endDate.split('T')
+    // let endTimeArray = endArray[1].split('.')
+    // console.log(endTimeArray[0])
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -17,9 +30,9 @@ const EditEventModal = ({ currentEvent }) => {
     const [capacity, setCapacity] = useState(currentEvent.capacity);
     const [price, setPrice] = useState(currentEvent.price);
     const [description, setDescription] = useState(currentEvent.description);
-    const [startDate, setStartDate] = useState('');
+    const [startDate, setStartDate] = useState(startArray[0]);
     const [startTime, setStartTime] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [endDate, setEndDate] = useState(endArray[0]);
     const [endTime, setEndTime] = useState('');
     // const [previewImageURL, setPreviewImageURL] = useState(currentEvent.previewImageURL)
     const [errors, setErrors] = useState([]);
@@ -38,10 +51,13 @@ const EditEventModal = ({ currentEvent }) => {
         const errors = [];
         // console.log(typeof capacity)
 
+        // console.log('starttime: ', startTime)
+        // console.log('endTime: ', endTime)
+
         const currentDate = new Date();
         const startString = startDate + " " + startTime;
         const start = new Date(startString)
-        // console.log(start)
+        console.log(start)
 
         const endString = endDate + " " + endTime;
         const end = new Date(endString);

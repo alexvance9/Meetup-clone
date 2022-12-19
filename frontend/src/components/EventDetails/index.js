@@ -49,8 +49,8 @@ const EventDetails = () => {
 
     const previewImage = eventDetails.EventImages.find(image => image.preview === true)
 
-    const eventSDate = new Date(eventDetails.startDate).toUTCString();
-    const eventEDate = new Date(eventDetails.endDate).toUTCString();
+    const eventSDate = new Date(eventDetails.startDate).toLocaleString('en-US');
+    const eventEDate = new Date(eventDetails.endDate).toLocaleString('en-US');
 
     return (
         <div className='event-details'>
@@ -58,6 +58,7 @@ const EventDetails = () => {
                 <h2>{eventDetails.name}</h2>
             </div>
             <div className="event-details-body">
+                {/* <div className="event-details-body-center"> */}
                 <div className="event-details-body-left">
                     <div className="event-detail-preview-image">
                         <img src={previewImage ? previewImage.url : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"} alt={eventDetails.name} />
@@ -89,8 +90,14 @@ const EventDetails = () => {
                                End Date: {eventEDate}
                             </div>
                             <div className="event-type">
-                                {eventDetails.type} <br />
+                                <div>
+                                {eventDetails.type} 
+                                </div>
+
+                                <div>
                                 {eventDetails.type === "In Person" ? "Venue Coming Soon" : "Video Link Coming Soon"}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -98,6 +105,7 @@ const EventDetails = () => {
                     {sessionLinks}
                 </div>
             </div>
+            
         </div>
 
     )
