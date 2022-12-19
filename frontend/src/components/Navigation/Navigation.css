@@ -26,6 +26,15 @@
     display: flex;
 }
 
+.logged-out-nav > button {
+    background-color: white;
+    color:black;
+}
+
+.logged-out-nav > button:hover {
+    color: #008294;
+}
+
 .dropbtn {
     background-color: white;
     color: black

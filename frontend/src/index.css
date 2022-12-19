@@ -12,6 +12,10 @@ margin: 0;
     height: 100vh;
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 button {
     border: none;
     border-radius: 5px;
@@ -20,6 +24,10 @@ button {
     color: white;
     padding: 10px 20px;
     font-weight: bold;
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 input {
