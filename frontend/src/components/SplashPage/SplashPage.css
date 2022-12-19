@@ -57,10 +57,20 @@
     color: #008294;
     font-weight: 600;
 }
+
+.splash-link:hover {
+    text-decoration: underline;
+}
+
+
 .link-image {
     width: 100%;
     height:80%;
     /* border: 2px solid red; */
+}
+
+.link-image:hover {
+    opacity: 0.8;
 }
 
 .link-image > img {
