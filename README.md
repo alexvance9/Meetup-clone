@@ -6,20 +6,21 @@
 link to live site: https://my-meetup-clone.onrender.com
 
 This is my first fullstack clone project completed at App Academy.
+
 Technologies used:
-    -Javascript and Node.js
-    -React and Redux frontend
-    -Express and Sequelize/PostGreSQL backend
+- Javascript and Node.js
+- React and Redux frontend
+- Express and Sequelize/PostGreSQL backend
 
 ### Features: 
 
--Initial features let users:
-    -create an account
-    -create a "group"
-    -edit/delete their group
-    -create events related to their group
-    -edit or delete events related to groups they have created
-    -view groups and events created by other users
+Initial features let users:
+- Create an account
+- Create a "group"
+- Edit/delete their group
+- Create events related to their group
+- Edit or delete events related to groups they have created
+- View groups and events created by other users
 
 ### Roadmap: features to come
 
