@@ -13,7 +13,7 @@ const EventDetails = () => {
     const [isLoaded, setIsLoaded] = useState(true);
     const eventDetails = useSelector(state => state.events.singleEvent);
 
-    // console.log(eventDetails.Group.organizerId)
+    // console.log(eventDetails)
     const organizer = eventDetails.Group.organizerId;
 
     useEffect(() => {
@@ -67,6 +67,7 @@ const EventDetails = () => {
                     <div className="event-details-description">
                         <h3>Details</h3>
                         <span>{eventDetails.description}</span>
+                        <div>${eventDetails.price}</div>
                     </div>
                 </div>
                 <div className="event-details-body-right">
