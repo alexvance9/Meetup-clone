@@ -19,7 +19,7 @@ function Navigation({ isLoaded }) {
             <div className="logged-in-nav">
                 <div className="create-group-button">
                     <OpenModalButton
-                        buttonText="Create New Group"
+                        buttonText="Create a new group"
                         modalComponent={<CreateGroupModal />}
                     />
                 </div>
@@ -46,6 +46,10 @@ function Navigation({ isLoaded }) {
             <span>
                 <NavLink exact to="/home"><img className="logo" src={logo} alt="HangOut logo" /></NavLink>
             </span>
+            <div>
+            <a href="https://github.com/alexvance9/Meetup-clone"><i className="fa-brands fa-github fa-xl"></i></a>
+            </div>
+
             {isLoaded && sessionLinks}
         </div>
     );

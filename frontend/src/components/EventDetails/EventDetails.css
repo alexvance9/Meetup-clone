@@ -1,6 +1,9 @@
 .event-details {
     width: 100vw;
     height: 80vh;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 .event-details-header {
     border-bottom: 2px solid rgb(232, 226, 226);
@@ -14,8 +17,9 @@
 
 .event-details-body {
     display: flex;
-    width: 100vw;
-    height: 100%;
+    /* flex-grow: 1; */
+    width: 100%;
+    height: 90%;
     margin: 0;
     background-color: rgb(246, 247, 248);
 }
@@ -24,12 +28,12 @@
     /* border: aqua solid 2px; */
     width: 50%;
     /* height: 50%; */
-    margin: 3em 4em 3em 3em;
+    margin: 3em 4em 3em 5em;
 }
 
 .event-detail-preview-image {
     width: 100%;
-    height: 70%;
+    height: 60%;
 }
 .event-detail-preview-image > img {
     width: 100%;
@@ -45,7 +49,7 @@
     /* border: 2px solid magenta; */
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 25%;
     height: 60%;
     justify-content: space-between;
     margin: 3em auto 1em;
@@ -55,7 +59,7 @@
     /* border: 2px solid green; */
     padding: 5%;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -73,17 +77,20 @@
     /* flex-direction: column; */
     padding: 5%;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 0.5rem;
     justify-content: space-between;
 }
 .event-date > div {
     padding: 5px 0px;
 }
+.event-type > div {
+    padding: 2px 0;
+}
 
 .time-place-icons {
     margin-top: 2px;
     margin-right: 2px;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
     padding: 5px;
     display: flex;
     flex-direction: column;

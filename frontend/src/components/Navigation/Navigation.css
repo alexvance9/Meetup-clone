@@ -9,9 +9,10 @@
     justify-content: space-between;
     align-items: center;
     height: 65px;
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
     background-color: white;
     border-bottom: solid 1px rgb(218, 213, 213);
+    padding: 0 5px;
 }
 
 .logo {
@@ -23,6 +24,18 @@
 
 .logged-in-nav {
     display: flex;
+}
+
+.dropbtn {
+    background-color: white;
+    color: black
+}
+
+.create-group-button > * {
+    background-color: white;
+    color: #008294;
+    /* text-decoration: underline; */
+    font-size: 15px;
 }
 
 .drop-container {
