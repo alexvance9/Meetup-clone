@@ -38,13 +38,10 @@ function EditGroupModal({ currentGroup }) {
                 closeModal()
                 return history.push(`/groups/${updatedGroup.id}`)
             } else {
-                console.log(updatedGroup)
+                updatedGroup.errors.forEach(error => errors.push(error))
             }
-        } else {
+        } 
             return setErrors(errors);
-            
-        }
-
             
     };
 

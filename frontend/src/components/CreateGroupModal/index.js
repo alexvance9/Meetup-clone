@@ -36,7 +36,9 @@ function CreateGroupModal() {
                 // console.log('new group: ', newGroup)
                 closeModal()
                 return history.push(`/groups/${newGroup.id}`)
-            } 
+            } else {
+                newGroup.errors.forEach(error => errors.push(error))
+            }
         }
         return setErrors(errors);
     };

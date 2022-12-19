@@ -57,7 +57,7 @@ const EditEventModal = ({ currentEvent }) => {
         const currentDate = new Date();
         const startString = startDate + " " + startTime;
         const start = new Date(startString)
-        console.log(start)
+        // console.log(start)
 
         const endString = endDate + " " + endTime;
         const end = new Date(endString);
@@ -78,7 +78,8 @@ const EditEventModal = ({ currentEvent }) => {
                 closeModal()
                 return history.push(`/events/${updatedEvent.id}`)
             } else {
-                console.log(updatedEvent)
+                updatedEvent.errors.forEach(error => errors.push(error))
+                
             }
         }
         return setErrors(errors);

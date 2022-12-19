@@ -61,7 +61,7 @@ const CreateEventModal = ({currentGroupId}) => {
                 closeModal()
                 return history.push(`/events/${newEvent.id}`)
             } else {
-                console.log(newEvent)
+                newEvent.errors.forEach(error => errors.push(error))
             }
         } 
         return setErrors(errors);
