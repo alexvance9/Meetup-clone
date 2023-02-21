@@ -30,7 +30,7 @@ function LoginFormModal() {
     const handleDemo = (e) => {
         e.preventDefault()
         setErrors([]);
-        const credential = "DemoUser";
+        const credential = "demo@user.io";
         const password = "password"
         
         return dispatch(sessionActions.login({ credential, password }))
