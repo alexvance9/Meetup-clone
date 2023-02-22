@@ -17,7 +17,7 @@ module.exports = {
         type: "Online",
         capacity: 10,
         price: 1.50,
-        description: "A really fun event where all of us Alex's get together and gab about Alex related topics. Topics including: What does an Alex like to eat? How should an Alex interact with non-Alex's? Where does an Alex come from? Where does an Alex go?",
+        description: "A really fun event where all of us Alexes get together and gab about Alex related topics. Topics including: What does an Alex like to eat? How should an Alex interact with non-Alexes? Where does an Alex come from? Where does an Alex go? What is, Alex?",
         startDate: new Date(2023, 3, 3),
         endDate: new Date(2023, 3, 4)
       },

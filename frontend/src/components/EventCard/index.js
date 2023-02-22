@@ -1,11 +1,14 @@
 import './EventCard.css'
 import { NavLink } from 'react-router-dom';
+import moment from 'moment'
 
 const EventCard = ({ event }) => {
     
     if (!event) return null;
 
-    const eventDate = new Date(event.startDate).toUTCString();
+    // const eventDate = new Date(event.startDate).toUTCString();
+    const eventDate = moment(event.startDate).format('MMMM Do YYYY, h:mm:ss a')
+    // console.log(eventDate)
     
     return (
         <NavLink to={`/events/${event.id}`}>
