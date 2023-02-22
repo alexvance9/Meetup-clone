@@ -58,18 +58,19 @@ export const thunkGetAllGroups = () => async (dispatch) => {
 
 export const thunkGetGroupDetails = (groupId) => async (dispatch) => {
     
-    // if (response.ok) {
-        try{
+
+    try{
         const response = await csrfFetch(`/api/groups/${groupId}`);
-        // console.log("it's okay!")
         const group = await response.json();
+        const response2 = await csrfFetch(`/api/groups/${groupId}/events`)
+        const groupEvents = await response2.json()
+        group['events'] = groupEvents.Events
+        // console.log(group)
         dispatch(getGroupDetails(group));
         group.ok = true;
         return group;
     } catch (e) {
-        // const errors = await response.json();
-        // return errors;
-        // console.log("it's not okay!")
+       
         return await e.json();
     }
 }
@@ -162,20 +163,20 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
 
 
 //////////// REDUCER ////////////////////
-const initialState = {allGroups: {}, singleGroup: {GroupImages: [], Organizer: {}, Venues: []}}
+const initialState = {allGroups: {}, singleGroup: {GroupImages: [], Organizer: {}, Venues: [], Events: []}}
 
 const groupsReducer = (state = initialState, action) => {
     
     switch (action.type) {
         case GET_GROUPS:{
-            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
+            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [], Events: [] } }
             action.groups.Groups.forEach(group => newState.allGroups[group.id] = group)
             return newState;
         }
         case GET_GROUP_DETAILS: {
-            const newState = { ...state, allGroups: {...state.allGroups}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
+            const newState = { ...state, allGroups: {...state.allGroups}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [], Events: [] } }
 
-            newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues]}
+            newState.singleGroup = {...action.group, GroupImages: [...action.group.GroupImages], Organizer: {...action.group.Organizer}, Venues: [...action.group.Venues], Events: [...action.group.events]}
             return newState;
         }
         case CREATE_GROUP:{
@@ -185,14 +186,14 @@ const groupsReducer = (state = initialState, action) => {
             return newState;
         }
         case EDIT_GROUP: {
-            const newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues] } };
+            const newState = { ...state, allGroups: { ...state.allGroups }, singleGroup: { ...state.singleGroup, GroupImages: [...state.singleGroup.GroupImages], Organizer: {...state.singleGroup.Organizer}, Venues: [...state.singleGroup.Venues], Events: [...state.singleGroup.Events] } };
             
-            newState.singleGroup = { ...action.group, numMembers: newState.singleGroup.numMembers, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues] }
+            newState.singleGroup = { ...action.group, numMembers: newState.singleGroup.numMembers, GroupImages: [...state.singleGroup.GroupImages], Organizer: { ...state.singleGroup.Organizer }, Venues: [...state.singleGroup.Venues], Events: [...state.singleGroup.Events] }
 
             return newState;
         }
         case DELETE_GROUP: {
-            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [] } }
+            const newState = { allGroups: {}, singleGroup: { GroupImages: [], Organizer: {}, Venues: [], Events: [] } }
             return newState;
         }
         default:
