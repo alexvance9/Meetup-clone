@@ -6,6 +6,7 @@ import OpenModalButton from "../OpenModalButton";
 import EditEventModal from "../EditEventModal";
 import DeleteEventModal from "../DeleteEventModal";
 import './EventDetails.css'
+import moment from 'moment'
 
 const EventDetails = () => {
     let { eventId } = useParams();
@@ -49,8 +50,8 @@ const EventDetails = () => {
 
     const previewImage = eventDetails.EventImages.find(image => image.preview === true)
 
-    const eventSDate = new Date(eventDetails.startDate).toLocaleString('en-US');
-    const eventEDate = new Date(eventDetails.endDate).toLocaleString('en-US');
+    const eventSDate = moment(eventDetails.startDate).format('MMMM Do YYYY, h:mm:ss a')
+    const eventEDate = moment(eventDetails.endDate).format('MMMM Do YYYY, h:mm:ss a');
 
     return (
         <div className='event-details'>
