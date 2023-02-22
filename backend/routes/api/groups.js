@@ -302,7 +302,7 @@ router.post('/:groupId/events', requireAuth, isOrganizerOrCoHost, async(req, res
 
 // get all events for group by groupid
 // no auth
-// REFACTOR PLEASE
+
 router.get('/:groupId/events', async (req, res, next) => {
     const group = await Group.findByPk(req.params.groupId);
     if(!group){

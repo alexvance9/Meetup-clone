@@ -13,7 +13,7 @@ module.exports = {
     {
       organizerId: 1,
       name: 'Alex Quarterly',
-      about: "A group for Alex's by Alex's. Are you Alexandria, Xander, Aleksei, Alexis, just plain Alex? Doesn't matter, all Alex variations welcome! We gather once quarterly to discuss what's new in being an Alex, and to say to all of our Alex friends, 'Hey, you can call me Al.",
+      about: "A group for Alexes by Alexes. Are you Alexandria, Xander, Aleksei, Alexis, just plain Alex? Doesn't matter, all Alex variations welcome! We gather once quarterly to discuss what's new in being an Alex, and to say to all of our Alex friends, 'Hey, you can call me Al.",
       type: 'Online',
       private: true,
       city: 'Bend',
