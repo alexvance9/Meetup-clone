@@ -8,7 +8,7 @@ const EventCard = ({ event }) => {
 
     // const eventDate = new Date(event.startDate).toUTCString();
     const eventDate = moment(event.startDate).format('MMMM Do YYYY, h:mm:ss a')
-    console.log(eventDate)
+    // console.log(eventDate)
     
     return (
         <NavLink to={`/events/${event.id}`}>
